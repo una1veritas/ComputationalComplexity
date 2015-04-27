@@ -27,10 +27,10 @@
 using namespace std;
 
 struct Tuple {
-	string current, next; // state[0]:Œ»ó‘ÔAstate[1]:Ÿó‘Ô
-//	char alph[4];		// alph[0]:“ü—Í—pƒe[ƒv‚Ì“Ç‚İ‚İAalph[1]:ì‹Æ—pƒe[ƒv‚Ì“Ç‚İ‚İA
-			// alph[2]:‘‚«‚İAalph[3]:‘‚«‚İ
-	string read, write, headding; // hder[0]:“ü—Í—pƒe[ƒv‚Ìƒwƒbƒh‚Ì“®‚«Ahder[1]:ì‹Æ—pƒe[ƒv‚Ì
+	string current, next; // state[0]:ç¾çŠ¶æ…‹ã€state[1]:æ¬¡çŠ¶æ…‹
+//	char alph[4];		// alph[0]:å…¥åŠ›ç”¨ãƒ†ãƒ¼ãƒ—ã®èª­ã¿è¾¼ã¿ã€alph[1]:ä½œæ¥­ç”¨ãƒ†ãƒ¼ãƒ—ã®èª­ã¿è¾¼ã¿ã€
+			// alph[2]:æ›¸ãè¾¼ã¿ã€alph[3]:æ›¸ãè¾¼ã¿
+	string read, write, headding; // hder[0]:å…¥åŠ›ç”¨ãƒ†ãƒ¼ãƒ—ã®ãƒ˜ãƒƒãƒ‰ã®å‹•ãã€hder[1]:ä½œæ¥­ç”¨ãƒ†ãƒ¼ãƒ—ã®
 
 	Tuple(int tapes) {
 		current = "";
@@ -80,24 +80,24 @@ public:
 
 };
 
-// ƒƒCƒ“ŠÖ”
+// ãƒ¡ã‚¤ãƒ³é–¢æ•°
 int main(int argc, char * argv[]) {
 
 	TuringMachine tm;
 
-	unsigned int i; //,v;			// v:map‚ÌƒL[
+	unsigned int i; //,v;			// v:mapã®ã‚­ãƒ¼
 	string intape;
 
-	// ƒe[ƒv‰Šú‰»
+	// ãƒ†ãƒ¼ãƒ—åˆæœŸåŒ–
 	if (argc == 3)
 		intape = argv[2];
 
 	cout << "Version 12.0419" << endl << endl;
 
-	// TMƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚İAó‘Ô‘JˆÚ•\‚ğì¬‚·‚é
+	// TMãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã¿ã€çŠ¶æ…‹é·ç§»è¡¨ã‚’ä½œæˆã™ã‚‹
 	tm.maketable(argv[1]);
 
-// ‘JˆÚŠÖ”‚Ì•\¦
+// é·ç§»é–¢æ•°ã®è¡¨ç¤º
 	cout << "---Transition table---" << endl;
 	for (i = 0; i < tm.table.size(); i++)
 		cout << tm.table[i].current << ' ' << tm.table[i].read[0] << ' '
@@ -112,7 +112,7 @@ int main(int argc, char * argv[]) {
 		cout << *ep << ", ";
 	}
 	cout << endl;
-	// ƒVƒ~ƒ…ƒŒ[ƒgÀs
+	// ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ãƒˆå®Ÿè¡Œ
 	cout
 	//		<< " Redo      -> 'r'" << endl
 	<< " Go next step         -> '[return]'" << endl
@@ -129,7 +129,7 @@ int main(int argc, char * argv[]) {
 	return 0;
 }
 
-// ó‘Ô‘JˆÚ•\‚Ìƒ`ƒFƒbƒN‚Æs”‚ÌŠm”F
+// çŠ¶æ…‹é·ç§»è¡¨ã®ãƒã‚§ãƒƒã‚¯ã¨è¡Œæ•°ã®ç¢ºèª
 void TuringMachine::maketable(char fname[]) {
 
 	ifstream fin(fname);
@@ -145,7 +145,7 @@ void TuringMachine::maketable(char fname[]) {
 	unsigned int c = 0;
 	set<string> states;
 
-	getline(fin, buff, '\n');
+	getline(fin, buff, 'Â¥n');
 	strin.str(buff);
 	strin.clear();
 	for (c = 0; !strin.eof(); c++) {
@@ -158,7 +158,7 @@ void TuringMachine::maketable(char fname[]) {
 	fin.clear();
 	fin.seekg(0, std::ios::beg);
 	while (!fin.eof()) {
-		if (getline(fin, buff, '\n') == 0)
+		if (getline(fin, buff, 'Â¥n') == 0)
 			continue;
 		//	cout << "'" << buff << "'" << buff.empty() << endl;
 		strin.str(buff);
@@ -210,7 +210,7 @@ void TuringMachine::maketable(char fname[]) {
 	bool skipremaining = false;
 	while (!fin.eof()) {
 		if ( skipremaining ) break;
-		getline(fin, buff, '\n');
+		getline(fin, buff, 'Â¥n');
 		strin.str(buff);
 		strin.clear();
 		if (string(buff).empty())
@@ -247,7 +247,7 @@ void TuringMachine::maketable(char fname[]) {
 			break;
 		if (states.count(table.back().current) == 0)
 			cerr << "Error!!" << endl << flush;
-		// ƒe[ƒv‹L†‚ªƒAƒ‹ƒtƒ@ƒxƒbƒg‚à‚µ‚­‚Í”š‚©‚ğƒ`ƒFƒbƒNB
+		// ãƒ†ãƒ¼ãƒ—è¨˜å·ãŒã‚¢ãƒ«ãƒ•ã‚¡ãƒ™ãƒƒãƒˆã‚‚ã—ãã¯æ•°å­—ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã€‚
 		for (c = 0; c < tapes; c++) {
 			if (!(isgraph(table.back().read[c])
 					&& isgraph(table.back().write[c]))) {
@@ -263,7 +263,7 @@ void TuringMachine::maketable(char fname[]) {
 				exit(1);
 			}
 		}
-		// ‘JˆÚ‚ªR,L,N‚Ì‚¢‚¸‚ê‚©‚É‚È‚Á‚Ä‚¢‚é‚©‚ğƒ`ƒFƒbƒNB
+		// é·ç§»ãŒR,L,Nã®ã„ãšã‚Œã‹ã«ãªã£ã¦ã„ã‚‹ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã€‚
 //		table.size()++;
 	}
 	fin.close();
@@ -272,9 +272,9 @@ void TuringMachine::maketable(char fname[]) {
 
 }
 
-// tape‚ğ“Ç‚İó‘Ô‘JˆÚ‚ğÀs‚·‚éŠÖ”
+// tapeã‚’èª­ã¿çŠ¶æ…‹é·ç§»ã‚’å®Ÿè¡Œã™ã‚‹é–¢æ•°
 void TuringMachine::simulate(string input, string work[]) {
-	// adrs:ƒe[ƒv‚Ìƒwƒbƒ_‚ÌˆÊ’uAs:Œ»ó‘ÔAstep:ƒXƒeƒbƒv”
+	// adrs:ãƒ†ãƒ¼ãƒ—ã®ãƒ˜ãƒƒãƒ€ã®ä½ç½®ã€s:ç¾çŠ¶æ…‹ã€step:ã‚¹ãƒ†ãƒƒãƒ—æ•°
 	unsigned int i;
 	int searchOffset, /* adrs[2],*//* s=0, */step = 0; //,undo;
 	char c = 'n';
@@ -297,11 +297,11 @@ void TuringMachine::simulate(string input, string work[]) {
 	}
 	state = table[0].current; //the initial state
 
-	// ‰Šúó‘Ô‚Ìˆóš
+	// åˆæœŸçŠ¶æ…‹ã®å°å­—
 	print(step);
-	// —”‚Ì‰Šú‰»
+	// ä¹±æ•°ã®åˆæœŸåŒ–
 	srand(time(NULL));
-	// ó‘Ô‘JˆÚ‚ğs‚¤
+	// çŠ¶æ…‹é·ç§»ã‚’è¡Œã†
 	while (true) {
 		searchOffset = rand() % table.size();
 		for (i = 0; i < table.size(); i++) {
@@ -342,7 +342,7 @@ void TuringMachine::simulate(string input, string work[]) {
 			break;
 		}
 
-		// ƒf[ƒ^‚Ì‘‚«Š·‚¦
+		// ãƒ‡ãƒ¼ã‚¿ã®æ›¸ãæ›ãˆ
 		for (unsigned int k = 0; k < tapes; k++) {
 			if (table[i].write[k] == TuringMachine::SPECIAL_THESAME) {
 				//*head[k] = *head[k];
@@ -392,7 +392,7 @@ void TuringMachine::simulate(string input, string work[]) {
 		exit(0);
 }
 
-// ƒXƒeƒbƒv–ˆ‚Ìó‘Ô‚ğ•\¦‚·‚éŠÖ”
+// ã‚¹ãƒ†ãƒƒãƒ—æ¯ã®çŠ¶æ…‹ã‚’è¡¨ç¤ºã™ã‚‹é–¢æ•°
 void TuringMachine::print(int step) { //string state){
 	string::iterator h;
 
@@ -400,7 +400,7 @@ void TuringMachine::print(int step) { //string state){
 	if (acceptingStates.find(state) != acceptingStates.end())
 		cout << "Accepting ";
 	cout << "State: " << state << endl;
-	// “ü—Í—pƒe[ƒv‚Ì•\¦
+	// å…¥åŠ›ç”¨ãƒ†ãƒ¼ãƒ—ã®è¡¨ç¤º
 	cout << "Input tape: " << endl;
 	for (h = tape[0].begin() - 1; h != tape[0].end(); h++) {
 		if (h + 1 != tape[0].begin())
@@ -415,7 +415,7 @@ void TuringMachine::print(int step) { //string state){
 	}
 	cout << endl;
 
-	// ì‹Æ—pƒe[ƒv‚Ì•\¦
+	// ä½œæ¥­ç”¨ãƒ†ãƒ¼ãƒ—ã®è¡¨ç¤º
 	cout << "Working tape:";
 	for (unsigned int tn = 1; tn < tapes; tn++) {
 		cout << endl;
