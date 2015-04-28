@@ -86,11 +86,11 @@ int main(int argc, char * argv[]) {
 	TuringMachine tm;
 
 	unsigned int i; //,v;			// v:mapのキー
-	string intape;
+	string inputTape;
 
 	// テープ初期化
 	if (argc == 3)
-		intape = argv[2];
+		inputTape = argv[2];
 
 	cout << "Version 12.0419" << endl << endl;
 
@@ -121,11 +121,13 @@ int main(int argc, char * argv[]) {
 //		<< " Traverse  -> 't'" << endl
 			<< " Exit                 -> 'e'" << endl << endl;
 
-	string wktape[tm.tapes];
+	string * workingTapes = new string[tm.tapes];
 	for(unsigned int i = 1; i < tm.tapes; i++) {
-		wktape[i] += tm.BLANK;
+		workingTapes[i] += tm.BLANK;
 	}
-	tm.simulate(intape, wktape);
+	tm.simulate(inputTape, workingTapes);
+
+	delete[] workingTapes;
 	return 0;
 }
 
@@ -145,7 +147,7 @@ void TuringMachine::maketable(char fname[]) {
 	unsigned int c = 0;
 	set<string> states;
 
-	getline(fin, buff, '¥n');
+	getline(fin, buff, '\n');
 	strin.str(buff);
 	strin.clear();
 	for (c = 0; !strin.eof(); c++) {
@@ -154,11 +156,11 @@ void TuringMachine::maketable(char fname[]) {
 //	cerr << "columns " << columns << endl;
 	tapes = (c - 2) / 3;
 
-	set<char> alphabet[tapes]; // = new set<char>[k];
+	set<char> * tapeAlphabets = new set<char>[tapes]; // = new set<char>[k];
 	fin.clear();
 	fin.seekg(0, std::ios::beg);
 	while (!fin.eof()) {
-		if (getline(fin, buff, '¥n') == 0)
+		if (getline(fin, buff, '\n') == 0)
 			continue;
 		//	cout << "'" << buff << "'" << buff.empty() << endl;
 		strin.str(buff);
@@ -172,7 +174,7 @@ void TuringMachine::maketable(char fname[]) {
 			strin >> tapealphabet;
 			if ( tapealphabet == TuringMachine::SPECIAL_DONTCARE || tapealphabet == TuringMachine::SPECIAL_THESAME )
 				continue;
-			alphabet[c].insert(tapealphabet);
+			tapeAlphabets[c].insert(tapealphabet);
 		}
 		strin >> dummy;
 		states.insert(dummy);
@@ -182,7 +184,7 @@ void TuringMachine::maketable(char fname[]) {
 			strin >> dummy; // head motion
 			if ( tapealphabet == TuringMachine::SPECIAL_DONTCARE || tapealphabet == TuringMachine::SPECIAL_THESAME )
 				continue;
-			alphabet[c].insert(tapealphabet);
+			tapeAlphabets[c].insert(tapealphabet);
 		}
 	}
 
@@ -195,13 +197,15 @@ void TuringMachine::maketable(char fname[]) {
 	for (unsigned int c = 0; c < tapes; c++) {
 		cout << "Tape " << c + 1 << " alphabet =";
 		cout << " {";
-		for (set<char>::iterator p = alphabet[c].begin();
-				p != alphabet[c].end(); p++) {
+		for (set<char>::iterator p = tapeAlphabets[c].begin();
+				p != tapeAlphabets[c].end(); p++) {
 			cout << *p << ", ";
 		}
 		cout << "}, ";
 	}
 	cout << endl;
+
+	delete[] tapeAlphabets;
 	//
 	//
 	fin.clear();
@@ -210,7 +214,7 @@ void TuringMachine::maketable(char fname[]) {
 	bool skipremaining = false;
 	while (!fin.eof()) {
 		if ( skipremaining ) break;
-		getline(fin, buff, '¥n');
+		getline(fin, buff, '\n');
 		strin.str(buff);
 		strin.clear();
 		if (string(buff).empty())
