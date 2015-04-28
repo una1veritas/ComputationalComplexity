@@ -1,0 +1,9 @@
+cp  0 _	cp  0 R 0 R
+cp  1 _	cp  1 R 1 R
+cp  # _	rew # N _ L
+rew # 0 rew # N 0 L
+rew # 1 rew # N 1 L
+rew # _ cmp # R _ R
+cmp 0 0 cmp 0 R 0 R
+cmp 1 1 cmp 1 R 1 R
+cmp _ _ !fin _ N _ N
