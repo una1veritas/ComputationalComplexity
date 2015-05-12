@@ -1,39 +1,25 @@
-prg:ini	* *	cpy:bgn * N * N
+s0	* *	c0 * N * N
 
-cpy:bgn * * cpy:wrt * N * N
-cpy:wrt 1 _	cpy:wrt 1 R 1 R
-cpy:wrt 0 _	cpy:wrt 0 R 0 R
-cpy:wrt _ _	cpy:rew _ N _ L
-cpy:rew _ 0	cpy:rew _ N 0 L
-cpy:rew _ 1	cpy:rew _ N 1 L
-cpy:rew _ _	cpy:end _ N _ R
+c0 0 _	c0 * R 0 R
+c0 1 _	c0 * R 1 R
+c0 _ _	c1 _ N _ L
+c1 _ 0	c1 _ N 0 L
+c1 _ 1	c1 _ N 1 L
+c1 _ _	cx _ N _ R
 
-dec:bgn * *	dec:crr * N * N
-dec:crr _ 1	dec:chk	_ N 0 R
-dec:chk _ 1 dec:rew _ N 1 L
-dec:chk _ 0 dec:rew _ N 0 L
-dec:chk _ _ dec:clr _ N _ L
-dec:clr _ 0 dec:clr _ N _ L
-dec:clr _ 1 dec:rew _ N 1 L
-dec:clr _ _ dec:rew _ N _ N
-dec:rew _ 0 dec:rew _ N 0 L
-dec:rew _ 1 dec:rew _ N 1 L
-dec:rew _ _	dec:end _ N _ R
-dec:crr _ 0	dec:crr _ N 1 R
+cx * * d0 * N * N
 
-dec:end * * ifzero * N * N
+d0 _ 1 d1 _ N 0 R
+d1 _ 1 d3 _ N 1 L
+d1 _ 0 d3 _ N 0 L
+d1 _ _ d2 _ N _ L
+d2 _ 0 d3 _ N _ L
+d0 _ 0 d0 _ N 1 R
+d3 _ 0 d3 _ N 0 L
+d3 _ 1 d3 _ N 1 L
+d3 _ _ dx _ N _ R
 
-brn * _  !fin * N * N
-brn * 0 	dec:bgn * N * N
-brn * 1 	dec:bgn * N * N
 
-inc:bgn * *	inc:crr * N * N
-inc:crr * 0	inc:rew * N 1 L
-inc:crr * 1 inc:crr * N 0 R
-inc:crr * _ inc:rew * N 1 L
-inc:rew * 0	inc:rew * N 0 L
-inc:rew * 1	inc:rew * N 1 L
-inc:rew * _ inc:end * N _ R
-inc:end * * inc:crr * N * N
-
-cpy:end * *	dec:bgn * N * N
+dx _ _ zero    _ N _ N
+dx _ 1 d0 _ N 1 N
+dx _ 0 d0 _ N 0 N
