@@ -5,7 +5,7 @@ CFLAGS = -Wall -g
 C++FLAGS = -Wall -g
 
 TMSRCS = ./src/tm.cpp
-TMOBJS = tm.o
+TMOBJS = TuringMachine.o tm.o
 
 .SUFFIXES: .o .cc .c++ .c
 
