@@ -59,7 +59,7 @@ public:
 	}
 
 public:
-	void maketable(const std::string &, const bool);
+	void maketable(const std::string &, const bool inputIsReadOnly = true);
 	void simulate(std::string, std::string[]);
 	void print(int); //string state);
 	bool searchin(std::string state, char oninput, char onwork);

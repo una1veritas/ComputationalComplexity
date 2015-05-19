@@ -27,14 +27,27 @@ void TuringMachine::maketable(const std::string & filename, const bool inputIsRe
 	unsigned int c = 0;
 	std::set<std::string> states;
 
-	getline(fin, buff, '\n');
-	strin.str(buff);
-	strin.clear();
-	for (c = 0; !strin.eof(); c++) {
+	while (!fin.eof()) {
+		getline(fin, buff, '\n');
+		strin.str(buff);
+		strin.clear();
 		strin >> dummy;
+		if (dummy[0] == '#') {
+			continue;
+		} else {
+			for (c = 1; !strin.eof(); c++) {
+				strin >> dummy;
+			}
+			break;
+		}
 	}
 	std::cerr << "columns " << c << std::endl;
-	tapes = (c - 2) / 3;
+	if ( inputIsReadOnly ) {
+		tapes = (c - 4) / 3 + 1;
+	} else {
+		tapes = (c - 2) / 3;
+	}
+	std::cerr << tapes << "tapes." << std::endl;
 
 	std::set<char> * tapeAlphabets = new std::set<char>[tapes]; // = new set<char>[k];
 	fin.clear();
@@ -46,27 +59,39 @@ void TuringMachine::maketable(const std::string & filename, const bool inputIsRe
 		strin.str(buff);
 		strin.clear();
 		strin >> dummy;
-		if (dummy.empty())
+		if (dummy.empty() or dummy[0] == '#') {
+			if ( dummy[0] == '#' )
+				std::cout << buff << std::endl;
 			continue;
-		//	cout << dummy << endl;
-		states.insert(dummy);
+		}
+		states.insert(dummy);  // collect from_state.
+		// collect tape alphabet
 		for (c = 0; c < tapes; c++) {
-			strin >> tapealphabet;
+			strin >> tapealphabet;  // for each tape if read
 			if ( tapealphabet == TuringMachine::SPECIAL_DONTCARE || tapealphabet == TuringMachine::SPECIAL_THESAME )
 				continue;
 			tapeAlphabets[c].insert(tapealphabet);
 		}
 		strin >> dummy;
-		states.insert(dummy);
+		states.insert(dummy);  // collect to_state
 		//	cout << dummy << endl;
 		for (c = 0; c < tapes; c++) {
-			strin >> tapealphabet;
+			if ( inpuIsReadOnly ) {
+				// write-symbol should be omitted.
+				tapealphabet = TuringMachine::SPECIAL_THESAME;
+				// but there remains a motion symbol.
+			} else {
+				// read a write symbol
+				strin >> tapealphabet;
+			}
 			strin >> dummy; // head motion
 			if ( tapealphabet == TuringMachine::SPECIAL_DONTCARE || tapealphabet == TuringMachine::SPECIAL_THESAME )
 				continue;
-			tapeAlphabets[c].insert(tapealphabet);
+			tapeAlphabets[c].insert(tapealphabet);  // collect a write-symbol
 		}
 	}
+
+	// Here the set of the states and the alphabet for each tape is defined.
 
 	std::cout << "This is " << tapes << " tape machine w/ states ";
 	for (std::set<std::string>::iterator p = states.begin(); p != states.end(); p++) {
@@ -86,8 +111,9 @@ void TuringMachine::maketable(const std::string & filename, const bool inputIsRe
 	std::cout << std::endl;
 
 	delete[] tapeAlphabets;
-	//
-	//
+
+	// Now define the transition table.
+
 	fin.clear();
 	fin.seekg(0, std::ios::beg);
 	v = 0;

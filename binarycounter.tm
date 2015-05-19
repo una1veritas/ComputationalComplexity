@@ -3,4 +3,4 @@ CRRY 1 _ 	HOME 1 N 1 L
 CRRY 1 0 	HOME 1 N 1 L
 HOME 1 0 	HOME 1 N 0 L
 HOME 1 _ 	CRRY 1 R _ R
-CRRY _ * 	FINI _ N - N
+CRRY _ * 	!FINI 1 N - N
