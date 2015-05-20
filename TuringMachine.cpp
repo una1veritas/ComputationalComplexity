@@ -123,7 +123,10 @@ void TuringMachine::maketable(const std::string & filename, const bool inputIsRe
 		getline(fin, buff, '\n');
 		strin.str(buff);
 		strin.clear();
+
 		if (std::string(buff).empty())
+			continue;
+		if (buff[0] == '#')
 			continue;
 
 		table.push_back(Tuple(tapes));
