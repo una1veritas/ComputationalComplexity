@@ -89,8 +89,8 @@ int main(int argc, char * argv[]) {
 //		<< " Traverse  -> 't'" << endl
 			<< " Exit                 -> 'e'" << endl << endl;
 
-	string * workingTapes = new string[tm.tapes];
-	for(unsigned int i = 1; i < tm.tapes; i++) {
+	string * workingTapes = new string[tm.noOfTapes];
+	for(unsigned int i = 1; i < tm.noOfTapes; i++) {
 		workingTapes[i] += tm.BLANK;
 	}
 	tm.simulate(inputTape, workingTapes);

@@ -12,6 +12,14 @@
 #include <stack>
 
 
+static const char SPECIAL_BLANK = '_';
+static const char SPECIAL_DONTCARE = '*';
+static const char SPECIAL_THESAME = '*';
+
+static const char HEADMOTION_NOMOVE = 'N';
+static const char HEADMOTION_RIGHT = 'R';
+static const char HEADMOTION_LEFT = 'L';
+
 struct Tuple {
 	std::string current, next; // state[0]:現状態、state[1]:次状態
 //	char alph[4];		// alph[0]:入力用テープの読み込み、alph[1]:作業用テープの読み込み、
@@ -21,9 +29,9 @@ struct Tuple {
 	Tuple(int tapes) {
 		current = "";
 		next = "";
-		read = std::string(tapes, ' ');
-		write = std::string(tapes, ' ');
-		headding = std::string(tapes, ' ');
+		read = std::string(tapes, SPECIAL_BLANK);
+		write = std::string(tapes, SPECIAL_BLANK);
+		headding = std::string(tapes, HEADMOTION_NOMOVE);
 	}
 
 	// input & output ;
@@ -35,10 +43,6 @@ struct Tuple {
 };
 
 struct TuringMachine {
-public:
-	static const char BLANK = '_';
-	static const char SPECIAL_DONTCARE = '*';
-	static const char SPECIAL_THESAME = '*';
 
 private:
 	std::string::iterator * head;
@@ -47,13 +51,13 @@ private:
 
 public:
 	std::vector<Tuple> table;
-	unsigned int tapes;
+	unsigned int noOfTapes;
 	std::set<std::string> acceptingStates;
 
 	int step;
 
 	TuringMachine() {
-		tapes = 1;
+		noOfTapes = 1;
 		//step = 0;
 		//answ = 0;
 	}
