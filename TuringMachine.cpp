@@ -305,9 +305,10 @@ void TuringMachine::simulate(std::string input, std::string work[]) {
 void TuringMachine::print(int step) { //string state){
 	std::string::iterator h;
 
-	std::cout << std::endl << "Step: " << step << ", ";
+	std::cout << std::endl << "Step: " << step << " ";
 	if (acceptingStates.find(state) != acceptingStates.end())
 		std::cout << "Accepting ";
+	std::cout << std::endl;
 	std::cout << "State: " << state << std::endl;
 	// 入力用テープの表示
 	std::cout << "Input tape: " << std::endl;
