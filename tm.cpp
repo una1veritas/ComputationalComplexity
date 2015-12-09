@@ -91,7 +91,7 @@ int main(int argc, char * argv[]) {
 
 	string * workingTapes = new string[tm.noOfTapes];
 	for(unsigned int i = 1; i < tm.noOfTapes; i++) {
-		workingTapes[i] += tm.BLANK;
+		workingTapes[i] += SPECIAL_BLANK;
 	}
 	tm.simulate(inputTape, workingTapes);
 
