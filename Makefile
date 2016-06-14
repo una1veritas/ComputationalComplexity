@@ -1,26 +1,21 @@
 
 CC	= cc
-C++	= c++
+CXX	= g++
 CFLAGS = -Wall -g
-C++FLAGS = -Wall -g
+CXXFLAGS = -Wall -g
 
-TMSRCS = ./src/tm.cpp
+%.o: %.cpp
+	$(CXX) -c $(CXXFLAGS) $<
+
+
 TMOBJS = TuringMachine.o tm.o
-
-.SUFFIXES: .o .cc .c++ .c
-
-.c.o:
-	$(CC) -c $(CFLAGS) $<
-
-.cpp.o:
-	$(C++) -c $(C++FLAGS) $<
 
 all: tm
 
 tm: $(TMOBJS)
-	$(C++) $(TMOBJS) -o tm
+	$(CXX) $(CXXFLAGS) $(TMOBJS) -o tm
 
-tm.o:
+TuringMachine.o: TuringMachine.h TuringMachine.cpp
 
 clean   :
-	rm -f core *.o *~
+	rm -f tm core *.o *~
