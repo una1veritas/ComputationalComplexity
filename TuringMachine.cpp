@@ -12,10 +12,8 @@
 #include "TuringMachine.h"
 
 // 状態遷移表のチェックと行数の確認
-void TuringMachine::maketable(const std::string & filename, const bool inputIsReadOnly) {
+void TuringMachine::maketable(std::istream & file, const bool inputIsReadOnly) {
 
-	std::ifstream fin(filename);
-//	int i;
 	std::istringstream strin;
 	std::string buff;
 	int v;
@@ -29,8 +27,8 @@ void TuringMachine::maketable(const std::string & filename, const bool inputIsRe
 
 	// inspect a line to determin the number of tapes.
 
-	while (!fin.eof()) {
-		getline(fin, buff, '\n');
+	while (!file.eof()) {
+		getline(file, buff, '\n');
 		strin.str(buff);
 		strin.clear();
 		strin >> dummy;
@@ -49,7 +47,7 @@ void TuringMachine::maketable(const std::string & filename, const bool inputIsRe
 	} else {
 		noOfTapes = (c - 2) / 3;
 	}
-	std::cerr << noOfTapes << "tapes." << std::endl;
+	std::cerr << noOfTapes << " tapes." << std::endl;
 
 	/*
 	std::set<char> * tapeAlphabets = new std::set<char>[noOfTapes]; // = new set<char>[k];
@@ -118,13 +116,13 @@ void TuringMachine::maketable(const std::string & filename, const bool inputIsRe
 	 */
 	// Now re-read to define the transition table.
 
-	fin.clear();
-	fin.seekg(0, std::ios::beg);
+	file.clear();
+	file.seekg(0, std::ios::beg);
 	v = 0;
 	bool skipremaining = false;
-	while (!fin.eof()) {
+	while (!file.eof()) {
 		if ( skipremaining ) break;
-		getline(fin, buff, '\n');
+		getline(file, buff, '\n');
 		strin.str(buff);
 		strin.clear();
 
@@ -152,7 +150,7 @@ void TuringMachine::maketable(const std::string & filename, const bool inputIsRe
 			strin >> table.back().headding[c];
 		}
 		//cerr << table[table.size()].read[0] << ", " << table[table.size()].read[1] << endl;
-		if (fin.eof())
+		if (file.eof())
 			break;
 		if (states.count(table.back().current) == 0)
 			std::cerr << "Error!!" << std::endl << std::flush;
@@ -175,7 +173,6 @@ void TuringMachine::maketable(const std::string & filename, const bool inputIsRe
 		// 遷移がR,L,Nのいずれかになっているかをチェック。
 //		table.size()++;
 	}
-	fin.close();
 
 	return;
 
@@ -354,3 +351,19 @@ bool TuringMachine::searchin(std::string s, char in, char wk) {
 	return false;
 }
 
+void TuringMachine::show(std::ostream & stream) {
+	stream << "---Transition table---" << std::endl;
+	for (unsigned int i = 0; i < table.size(); i++)
+		stream << table[i].current << ' ' << table[i].read[0] << ' '
+				<< table[i].read[1] << " -> " << table[i].next << " ("
+				<< table[i].write[0] << ", " << table[i].headding[0]
+				<< "), (" << table[i].write[1] << ", "
+				<< table[i].headding[1] << ") " << std::endl;
+	stream << "---Table end---" << std::endl;
+	stream << "Accepting states: ";
+	for (std::set<std::string>::iterator ep = acceptingStates.begin();
+			ep != acceptingStates.end(); ep++) {
+		stream << *ep << ", ";
+	}
+	stream << std::endl;
+}
