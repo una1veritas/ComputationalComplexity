@@ -12,9 +12,14 @@
 #include "TuringMachine.h"
 
 // 状態遷移表のチェックと行数の確認
+<<<<<<< HEAD
 void TuringMachine::maketable(std::ifstream & fin, const bool inputIsReadOnly) {
 
 //	int i;
+=======
+void TuringMachine::maketable(std::istream & file, const bool inputIsReadOnly) {
+
+>>>>>>> master
 	std::istringstream strin;
 	std::string buff;
 	int v;
@@ -28,8 +33,8 @@ void TuringMachine::maketable(std::ifstream & fin, const bool inputIsReadOnly) {
 
 	// inspect a line to determin the number of tapes.
 
-	while (!fin.eof()) {
-		getline(fin, buff, '\n');
+	while (!file.eof()) {
+		getline(file, buff, '\n');
 		strin.str(buff);
 		strin.clear();
 		strin >> dummy;
@@ -48,17 +53,17 @@ void TuringMachine::maketable(std::ifstream & fin, const bool inputIsReadOnly) {
 	} else {
 		noOfTapes = (c - 2) / 3;
 	}
-	std::cerr << noOfTapes << "tapes." << std::endl;
+	std::cerr << noOfTapes << " tapes." << std::endl;
 
 	// Now re-read to define the transition table.
 
-	fin.clear();
-	fin.seekg(0, std::ios::beg);
+	file.clear();
+	file.seekg(0, std::ios::beg);
 	v = 0;
 	bool skipremaining = false;
-	while (!fin.eof()) {
+	while (!file.eof()) {
 		if ( skipremaining ) break;
-		getline(fin, buff, '\n');
+		getline(file, buff, '\n');
 		strin.str(buff);
 		strin.clear();
 
@@ -86,9 +91,13 @@ void TuringMachine::maketable(std::ifstream & fin, const bool inputIsReadOnly) {
 			strin >> table.back().headding[c];
 		}
 		//cerr << table[table.size()].read[0] << ", " << table[table.size()].read[1] << endl;
+<<<<<<< HEAD
 		//std::cerr << table.back() << std::endl;
 
 		if (fin.eof())
+=======
+		if (file.eof())
+>>>>>>> master
 			break;
 		// テープ記号がアルファベットもしくは数字かをチェック。
 		for (c = 0; c < noOfTapes; c++) {
@@ -109,7 +118,6 @@ void TuringMachine::maketable(std::ifstream & fin, const bool inputIsReadOnly) {
 		// 遷移がR,L,Nのいずれかになっているかをチェック。
 //		table.size()++;
 	}
-	fin.close();
 
 	return;
 
@@ -239,11 +247,19 @@ void TuringMachine::simulate(std::string input, std::string work[]) {
 void TuringMachine::print(int step) { //string state){
 	std::string::iterator h;
 
+<<<<<<< HEAD
 	std::cout << std::endl << " " << step << ": |- "; //std::endl; //<< ", ";
 	std::cout << "(" << state; // << std::endl;
 	if (acceptingStates.find(state) != acceptingStates.end())
 		std::cout << "*";
 	std::cout << ", ";
+=======
+	std::cout << std::endl << "Step: " << step << " ";
+	if (acceptingStates.find(state) != acceptingStates.end())
+		std::cout << "Accepting ";
+	std::cout << std::endl;
+	std::cout << "State: " << state << std::endl;
+>>>>>>> master
 	// 入力用テープの表示
 	//std::cout << "Input tape: " << std::endl;
 	for (h = tape[0].begin() - 1; h != tape[0].end(); h++) {
@@ -289,3 +305,19 @@ bool TuringMachine::searchin(std::string s, char in, char wk) {
 	return false;
 }
 
+void TuringMachine::show(std::ostream & stream) {
+	stream << "---Transition table---" << std::endl;
+	for (unsigned int i = 0; i < table.size(); i++)
+		stream << table[i].current << ' ' << table[i].read[0] << ' '
+				<< table[i].read[1] << " -> " << table[i].next << " ("
+				<< table[i].write[0] << ", " << table[i].headding[0]
+				<< "), (" << table[i].write[1] << ", "
+				<< table[i].headding[1] << ") " << std::endl;
+	stream << "---Table end---" << std::endl;
+	stream << "Accepting states: ";
+	for (std::set<std::string>::iterator ep = acceptingStates.begin();
+			ep != acceptingStates.end(); ep++) {
+		stream << *ep << ", ";
+	}
+	stream << std::endl;
+}
