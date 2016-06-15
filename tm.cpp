@@ -8,11 +8,9 @@
 
 //#include <stdio.h>
 //#include <conio.h>
-#include <unistd.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <time.h>
+#include <cctype>
+#include <cstdlib>
+#include <ctime>
 //#include <windows.h>
 #include <cmath>
 #include <string>

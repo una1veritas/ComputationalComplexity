@@ -2,7 +2,7 @@
 CC	= cc
 CXX	= g++
 CFLAGS = -Wall -g
-CXXFLAGS = -Wall -g
+CXXFLAGS = -Wall -g -O
 
 %.o: %.cpp
 	$(CXX) -c $(CXXFLAGS) $<

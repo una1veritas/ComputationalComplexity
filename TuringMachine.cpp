@@ -152,8 +152,11 @@ void TuringMachine::maketable(std::istream & file, const bool inputIsReadOnly) {
 		//cerr << table[table.size()].read[0] << ", " << table[table.size()].read[1] << endl;
 		if (file.eof())
 			break;
+#ifdef FALSE
+#error ???
 		if (states.count(table.back().current) == 0)
 			std::cerr << "Error!!" << std::endl << std::flush;
+#endif
 		// テープ記号がアルファベットもしくは数字かをチェック。
 		for (c = 0; c < noOfTapes; c++) {
 			if (!(isgraph(table.back().read[c])
