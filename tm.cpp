@@ -51,15 +51,7 @@ int main(int argc, char * argv[]) {
 	CommandParams params;
 	ifstream file;
 
-<<<<<<< HEAD
-	unsigned int i; //,v;			// v:mapのキー
-	string fname;
-	string inputTape;
-
-	bool readOnlyInput = true;
-=======
 	cout << "Version 16.0615" << endl << endl;
->>>>>>> master
 
 	if ( getCommandParams(params, argc, argv) != 0 ) {
 		cerr << "Parameter error." << endl;
@@ -72,19 +64,16 @@ int main(int argc, char * argv[]) {
 		return 1;
 	}
 	// TMファイルを読み込み、状態遷移表を作成する
-<<<<<<< HEAD
+
 	std::ifstream fin;
-	fin.open(fname);
+	fin.open(params.programFileName);
 	if ( !fin ) {
-		std::cerr << "Failed to open " << fname << "." << std::endl;
+		std::cerr << "Failed to open " << params.programFileName << "." << std::endl;
 		exit(1);
 	}
-	tm.maketable(fin, readOnlyInput);
-=======
 
 	tm.maketable(file, params.inputIsReadOnly);
 	file.close();
->>>>>>> master
 
 // 遷移関数の表示
 	tm.show(cout);
