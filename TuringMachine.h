@@ -12,7 +12,7 @@
 #include <stack>
 
 
-static const char SPECIAL_BLANK = '_';
+static const char SPECIAL_BLANK = 'B';
 static const char SPECIAL_DONTCARE = '*';
 static const char SPECIAL_THESAME = '*';
 
@@ -63,7 +63,7 @@ public:
 	}
 
 public:
-	void maketable(const std::string &, const bool inputIsReadOnly = true);
+	void maketable(std::ifstream &, const bool inputIsReadOnly = true);
 	void simulate(std::string, std::string[]);
 	void print(int); //string state);
 	bool searchin(std::string state, char oninput, char onwork);

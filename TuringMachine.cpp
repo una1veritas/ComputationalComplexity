@@ -12,9 +12,8 @@
 #include "TuringMachine.h"
 
 // 状態遷移表のチェックと行数の確認
-void TuringMachine::maketable(const std::string & filename, const bool inputIsReadOnly) {
+void TuringMachine::maketable(std::ifstream & fin, const bool inputIsReadOnly) {
 
-	std::ifstream fin(filename);
 //	int i;
 	std::istringstream strin;
 	std::string buff;
@@ -51,71 +50,6 @@ void TuringMachine::maketable(const std::string & filename, const bool inputIsRe
 	}
 	std::cerr << noOfTapes << "tapes." << std::endl;
 
-	/*
-	std::set<char> * tapeAlphabets = new std::set<char>[noOfTapes]; // = new set<char>[k];
-	fin.clear();
-	fin.seekg(0, std::ios::beg);
-	while (!fin.eof()) {
-		if (getline(fin, buff, '\n') == 0)
-			continue;
-		//	cout << "'" << buff << "'" << buff.empty() << endl;
-		strin.str(buff);
-		strin.clear();
-		strin >> dummy;
-		if (dummy.empty() or dummy[0] == '#') {
-			if ( dummy[0] == '#' )
-				std::cout << buff << std::endl;
-			continue;
-		}
-		states.insert(dummy);  // collect from_state.
-		// collect tape alphabet
-		for (c = 0; c < noOfTapes; c++) {
-			strin >> tapealphabet;  // for each tape if read
-			if ( tapealphabet == TuringMachine::SPECIAL_DONTCARE || tapealphabet == TuringMachine::SPECIAL_THESAME )
-				continue;
-			tapeAlphabets[c].insert(tapealphabet);
-		}
-		strin >> dummy;
-		states.insert(dummy);  // collect to_state
-		//	cout << dummy << endl;
-		for (c = 0; c < noOfTapes; c++) {
-			if ( inputIsReadOnly ) {
-				// write-symbol should be omitted.
-				tapealphabet = TuringMachine::SPECIAL_THESAME;
-				// but there remains a motion symbol.
-			} else {
-				// read a write symbol
-				strin >> tapealphabet;
-			}
-			strin >> dummy; // head motion
-			if ( tapealphabet == TuringMachine::SPECIAL_DONTCARE || tapealphabet == TuringMachine::SPECIAL_THESAME )
-				continue;
-			tapeAlphabets[c].insert(tapealphabet);  // collect a write-symbol
-		}
-	}
-
-	// Here the set of the states and the alphabet for each tape is defined.
-
-	std::cout << "This is " << noOfTapes << " tape machine w/ states ";
-	for (std::set<std::string>::iterator p = states.begin(); p != states.end(); p++) {
-		std::cout << *p << ", ";
-	}
-	std::cout << std::endl;
-	std::cout << "and, for each tape, alphabet is as follows: " << std::endl;
-	for (unsigned int c = 0; c < noOfTapes; c++) {
-		std::cout << "Tape " << c + 1 << " alphabet =";
-		std::cout << " {";
-		for (std::set<char>::iterator p = tapeAlphabets[c].begin();
-				p != tapeAlphabets[c].end(); p++) {
-			std::cout << *p << ", ";
-		}
-		std::cout << "}, ";
-	}
-	std::cout << std::endl;
-
-	delete[] tapeAlphabets;
-
-	 */
 	// Now re-read to define the transition table.
 
 	fin.clear();
@@ -152,10 +86,10 @@ void TuringMachine::maketable(const std::string & filename, const bool inputIsRe
 			strin >> table.back().headding[c];
 		}
 		//cerr << table[table.size()].read[0] << ", " << table[table.size()].read[1] << endl;
+		//std::cerr << table.back() << std::endl;
+
 		if (fin.eof())
 			break;
-		if (states.count(table.back().current) == 0)
-			std::cerr << "Error!!" << std::endl << std::flush;
 		// テープ記号がアルファベットもしくは数字かをチェック。
 		for (c = 0; c < noOfTapes; c++) {
 			if (!(isgraph(table.back().read[c])
@@ -273,13 +207,13 @@ void TuringMachine::simulate(std::string input, std::string work[]) {
 				break;
 			}
 			if (head[k] == tape[k].begin() && headd == -1) {
-				tape[k] = std::string("_") + tape[k];
+				tape[k] = std::string(1,SPECIAL_BLANK) + tape[k];
 				head[k] = tape[k].begin();
 			} else {
 				head[k] = head[k] + headd;
 			}
 			if (head[k] == tape[k].end()) {
-				tape[k] += "_";
+				tape[k] += std::string(1,SPECIAL_BLANK);
 				head[k] = tape[k].end();
 				head[k]--;
 			}
@@ -289,28 +223,29 @@ void TuringMachine::simulate(std::string input, std::string work[]) {
 		print(step);
 		// undo,redo
 	}
-	std::cout << std::endl << "The Machine has halted at the state '" << state << "' and " << std::endl;
+	std::cout << std::endl << "Stopped at the state '" << state << "' and " ;
 	if (acceptingStates.find(state) != acceptingStates.end()) {
 		std::cout << "accepted ";
 	} else {
 		std::cout << "rejected ";
 	}
-	std::cout << "input '" << input << "'." << std::endl << std::endl;
+	std::cout << "'" << input << "'." << std::endl << std::endl;
 
 	if (step == 0)
 		exit(0);
 }
 
-// ステップ毎の状態を表示する関数
+// 計算状況を印字する関数
 void TuringMachine::print(int step) { //string state){
 	std::string::iterator h;
 
-	std::cout << std::endl << "Step: " << step << ", ";
+	std::cout << std::endl << " " << step << ": |- "; //std::endl; //<< ", ";
+	std::cout << "(" << state; // << std::endl;
 	if (acceptingStates.find(state) != acceptingStates.end())
-		std::cout << "Accepting ";
-	std::cout << "State: " << state << std::endl;
+		std::cout << "*";
+	std::cout << ", ";
 	// 入力用テープの表示
-	std::cout << "Input tape: " << std::endl;
+	//std::cout << "Input tape: " << std::endl;
 	for (h = tape[0].begin() - 1; h != tape[0].end(); h++) {
 		if (h + 1 != tape[0].begin())
 			std::cout << *h;
@@ -322,12 +257,13 @@ void TuringMachine::print(int step) { //string state){
 			std::cout << " ";
 		}
 	}
-	std::cout << std::endl;
+	//std::cout << std::endl;
 
 	// 作業用テープの表示
-	std::cout << "Working tape:";
+	//std::cout << "Working tape:";
 	for (unsigned int tn = 1; tn < noOfTapes; tn++) {
-		std::cout << std::endl;
+		std::cout << ", "; //std::endl;
+		//std::cout << std::endl;
 		for (h = tape[tn].begin() - 1; h != tape[tn].end(); h++) {
 			if (h + 1 != tape[tn].begin())
 				std::cout << *h;
@@ -340,7 +276,7 @@ void TuringMachine::print(int step) { //string state){
 			}
 		}
 	}
-	std::cout << std::endl;
+	std::cout << ")" << std::endl;
 
 }
 

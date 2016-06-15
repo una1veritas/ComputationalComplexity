@@ -36,6 +36,7 @@ int main(int argc, char * argv[]) {
 	unsigned int i; //,v;			// v:mapのキー
 	string fname;
 	string inputTape;
+
 	bool readOnlyInput = true;
 
 	unsigned int c;
@@ -63,7 +64,13 @@ int main(int argc, char * argv[]) {
 	cout << "Version 12.0419" << endl << endl;
 
 	// TMファイルを読み込み、状態遷移表を作成する
-	tm.maketable(fname, readOnlyInput);
+	std::ifstream fin;
+	fin.open(fname);
+	if ( !fin ) {
+		std::cerr << "Failed to open " << fname << "." << std::endl;
+		exit(1);
+	}
+	tm.maketable(fin, readOnlyInput);
 
 // 遷移関数の表示
 	cout << "---Transition table---" << endl;
@@ -91,11 +98,12 @@ int main(int argc, char * argv[]) {
 
 	string * workingTapes = new string[tm.noOfTapes];
 	for(unsigned int i = 1; i < tm.noOfTapes; i++) {
-		workingTapes[i] += tm.BLANK;
+		workingTapes[i] += SPECIAL_BLANK;
 	}
 	tm.simulate(inputTape, workingTapes);
 
 	delete[] workingTapes;
 	return 0;
+
 }
 

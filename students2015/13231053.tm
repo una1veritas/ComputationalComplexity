@@ -1,0 +1,16 @@
+0 a B 1 R a R
+0 b B 5 N B N
+1 a B 1 R a R
+1 b B 2 R B L
+2 a a 3 R a L
+2 b a 5 N a N
+2 B a 5 N a N
+3 a a 3 R a L
+3 a B 4 N B R
+3 B B !6 N B N
+4 a B 3 N B L
+4 a a 4 R a R
+4 B B 6 N B N
+4 b a 5 N a N
+4 B a 5 N a N
+4 b B 5 N B N

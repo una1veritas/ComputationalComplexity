@@ -1,0 +1,9 @@
+0 a B 1 R a R
+1 a B 2 R a R
+2 a B 2 R a R
+2 b B 3 R B L
+3 a a 3 R a L
+3 a B 4 N B R
+4 a a 4 R a R
+4 B B !5 N B N
+1 b B 5 N B N
