@@ -45,7 +45,7 @@ struct Tuple {
 struct TuringMachine {
 
 private:
-	std::string::iterator * head;
+	int * head;
 	std::string * tape;
 	std::string state;
 
@@ -65,7 +65,7 @@ public:
 public:
 	void maketable(std::istream &, const bool inputIsReadOnly = true);
 	void simulate(std::string, std::string[]);
-	void print(int); //string state);
+	void print(void); //string state);
 	bool searchin(std::string state, char oninput, char onwork);
 
 	void show(std::ostream & stream);

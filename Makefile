@@ -19,3 +19,5 @@ TuringMachine.o: TuringMachine.h TuringMachine.cpp
 
 clean   :
 	rm -f tm core *.o *~
+
+distclean: clean

@@ -79,6 +79,9 @@ int main(int argc, char * argv[]) {
 //		<< " Traverse  -> 't'" << endl
 			<< " Exit                 -> 'e'" << endl << endl;
 
+	if ( params.inputTape.length() == 0 ) {
+		params.inputTape += SPECIAL_BLANK;
+	}
 	string * workingTapes = new string[tm.noOfTapes];
 	for(unsigned int i = 1; i < tm.noOfTapes; i++) {
 		workingTapes[i] += SPECIAL_BLANK;
