@@ -42,12 +42,63 @@ struct Tuple {
 
 };
 
+struct Tape {
+	int headpos;
+	std::string content;
+
+	void set(std::string str) {
+		headpos = 0;
+		content = str;
+	}
+
+	char & head(void) {
+		return content[headpos];
+	}
+
+	const char move(int headdir) {
+		char tmp = head();
+		if ( headdir == 0 )
+			return tmp;
+		headdir = (headdir < 0 ? -1 : 1 );
+
+		if ( headpos == 0 && headdir == -1) {
+			content = std::string("_") + content;
+			headpos = 0;
+		} else {
+			headpos += headdir;
+			if ( headpos == length() )
+				content += "_";
+		}
+		return tmp;
+	}
+
+	const char & head(void) const {
+		return content[headpos];
+	}
+
+	unsigned int length(void) const {
+		return content.length();
+	}
+
+	friend std::ostream & operator<<(std::ostream & stream, const Tape & tape) {
+		for (int h = 0; h <= tape.length() ; h++) {
+			if ( h == tape.headpos ) {
+				stream << "[" << tape.content[h];
+			} else if ( h == tape.headpos+1 ) {
+				stream << "]" << tape.content[h];
+			} else {
+				stream << " " << tape.content[h];
+			}
+		}
+	return stream;
+	}
+};
+
 struct TuringMachine {
 
 private:
-	int * head;
-	std::string * tape;
 	std::string state;
+	Tape * tapes;
 
 public:
 	std::vector<Tuple> table;
@@ -56,14 +107,12 @@ public:
 
 	int step;
 
-	TuringMachine() {
-		noOfTapes = 1;
-		//step = 0;
-		//answ = 0;
-	}
+	TuringMachine(void) { }
+	~TuringMachine(void) { delete [] tapes; }
 
 public:
-	void maketable(std::istream &, const bool inputIsReadOnly = true);
+	void program(std::istream &, const bool inputIsReadOnly = true);
+	void initialize(const std::string inputTape);
 	void simulate(std::string, std::string[]);
 	void print(void); //string state);
 	bool searchin(std::string state, char oninput, char onwork);

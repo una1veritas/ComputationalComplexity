@@ -63,7 +63,7 @@ int main(int argc, char * argv[]) {
 	}
 	// TMファイルを読み込み、状態遷移表を作成する
 
-	tm.maketable(file, params.inputIsReadOnly);
+	tm.program(file, params.inputIsReadOnly);
 	file.close();
 
 // 遷移関数の表示
@@ -79,13 +79,7 @@ int main(int argc, char * argv[]) {
 //		<< " Traverse  -> 't'" << endl
 			<< " Exit                 -> 'e'" << endl << endl;
 
-	if ( params.inputTape.length() == 0 ) {
-		params.inputTape += SPECIAL_BLANK;
-	}
-	string * workingTapes = new string[tm.noOfTapes];
-	for(unsigned int i = 1; i < tm.noOfTapes; i++) {
-		workingTapes[i] += SPECIAL_BLANK;
-	}
+
 	tm.simulate(params.inputTape, workingTapes);
 
 	delete[] workingTapes;

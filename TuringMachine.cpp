@@ -12,7 +12,7 @@
 #include "TuringMachine.h"
 
 // 状態遷移表のチェックと行数の確認
-void TuringMachine::maketable(std::istream & file, const bool inputIsReadOnly) {
+void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 
 	std::istringstream strin;
 	std::string buff;
@@ -112,7 +112,20 @@ void TuringMachine::maketable(std::istream & file, const bool inputIsReadOnly) {
 	}
 
 	return;
+}
 
+void TuringMachine::initialize(const std::string inputTape) {
+
+	tapes = new Tape[noOfTapes];
+	tapes[0].set(inputTape);
+	if ( inputTape.length() == 0 )
+		tapes[0].content += SPECIAL_BLANK;
+	//cerr << head[0] << "," << input.begin()<< endl;
+	for(unsigned int i = 1; i < noOfTapes; i++) {
+		tapes[i].content += SPECIAL_BLANK;
+		tapes[i].headpos = 0;
+	}
+	state = table[0].current; //the initial state
 }
 
 // tapeを読み状態遷移を実行する関数
@@ -127,18 +140,6 @@ void TuringMachine::simulate(std::string input, std::string work[]) {
 	std::map<char, int>::iterator hitr;
 
 	int headd;
-
-	tape = new std::string[noOfTapes];
-	head = new int[noOfTapes];
-
-	tape[0] = input;
-	head[0] = 0;
-	//cerr << head[0] << "," << input.begin()<< endl;
-	for (i = 1; i < noOfTapes; i++) {
-		tape[i] = work[i];
-		head[i] = 0;
-	}
-	state = table[0].current; //the initial state
 
 	// 初期状態の印字
 	std::cout << std::endl << "Step: " << step << " ";
@@ -156,11 +157,11 @@ void TuringMachine::simulate(std::string input, std::string work[]) {
 				std::string expectstr(""), headstr("");
 				for (tn = 0; tn < noOfTapes; tn++) {
 					if ( currentTuple.read[tn] == SPECIAL_DONTCARE ) {
-						expectstr += tape[tn][head[tn]];
+						expectstr += tapes[tn].head();
 					} else {
 						expectstr += currentTuple.read[tn];
 					}
-					headstr += tape[tn][head[tn]];
+					headstr += tapes[tn].head();
 				}
 				//cerr << expectstr << " - " << headstr << endl;
 				if ( headstr == expectstr)
@@ -192,7 +193,7 @@ void TuringMachine::simulate(std::string input, std::string work[]) {
 				//*head[k] = *head[k];
 				// implements this by don't touch
 			} else {
-				tape[k][head[k]] = table[i].write[k];
+				tapes[k].head() = table[i].write[k] ;
 			}
 			switch (table[i].headding[k]) {
 			case 'R':
@@ -207,17 +208,7 @@ void TuringMachine::simulate(std::string input, std::string work[]) {
 				headd = 0;
 				break;
 			}
-			if ( head[k] == 0 && headd == -1) {
-				tape[k] = std::string("_") + tape[k];
-				head[k] = 0;
-			} else {
-				head[k] = head[k] + headd;
-			}
-			if ( head[k] == tape[k].length() ) {
-				tape[k] += "_";
-				head[k] = tape[k].length();
-				head[k]--;
-			}
+			tapes[k].move(headd);
 			state = table[i].next;
 		}
 		step++;
@@ -240,44 +231,20 @@ void TuringMachine::simulate(std::string input, std::string work[]) {
 // ステップ毎の状態を表示する関数
 void TuringMachine::print(void) { //string state){
 
+	// 状態の表示
 	if ( acceptingStates.find(state) != acceptingStates.end() )
 		std::cout << "Accepting ";
 	std::cout << std::endl;
 	std::cout << "State: " << state << std::endl;
+
 	// 入力用テープの表示
 	std::cout << "Input tape: " << std::endl;
-	// std::cout << "head 0 = "<< head[0] << "tape = \"" << tape[0] << "\"" <<std::endl;
-	for (int h = 0; h <= tape[0].length() ; h++) {
-		if ( h == head[0]) {
-			std::cout << "[";
-			std::cout << tape[0][h];
-		} else if ( h == head[0]+1 ) {
-			std::cout << "]";
-			std::cout << tape[0][h];
-		} else {
-			std::cout << " ";
-			std::cout << tape[0][h];
-		}
-	}
-	std::cout << std::flush;
-	std::cout << std::endl;
+	std::cout << tapes[0] << std::endl;
 
 	// 作業用テープの表示
 	std::cout << "Working tape:";
 	for (unsigned int tn = 1; tn < noOfTapes; tn++) {
-		std::cout << std::endl;
-		for (int h = 0; h <= tape[tn].length(); h++) {
-			if ( h == head[tn]) {
-				std::cout << "[";
-				std::cout << tape[tn][h];
-			} else if ( h == head[tn]+1 ) {
-				std::cout << "]";
-				std::cout << tape[tn][h];
-			} else {
-				std::cout << " ";
-				std::cout << tape[tn][h];
-			}
-		}
+		std::cout << std::endl << tapes[tn];
 	}
 	std::cout << std::endl;
 
