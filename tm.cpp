@@ -66,7 +66,7 @@ int main(int argc, char * argv[]) {
 	tm.program(file, params.inputIsReadOnly);
 	file.close();
 
-// 遷移関数の表示
+	// 遷移関数の表示
 	tm.show(cout);
 	cout << endl << endl;
 
@@ -79,10 +79,9 @@ int main(int argc, char * argv[]) {
 //		<< " Traverse  -> 't'" << endl
 			<< " Exit                 -> 'e'" << endl << endl;
 
+	tm.initialize(params.inputTape);
+	tm.simulate();
 
-	tm.simulate(params.inputTape, workingTapes);
-
-	delete[] workingTapes;
 	return 0;
 }
 

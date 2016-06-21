@@ -2,6 +2,8 @@
 #define _TURINGMACHINE_H_
 
 #include <cmath>
+#include <cstdlib>
+#include <ctime>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -21,15 +23,15 @@ static const char HEADMOTION_RIGHT = 'R';
 static const char HEADMOTION_LEFT = 'L';
 
 struct Tuple {
-	std::string current, next; // state[0]:現状態、state[1]:次状態
-//	char alph[4];		// alph[0]:入力用テープの読み込み、alph[1]:作業用テープの読み込み、
-			// alph[2]:書き込み、alph[3]:書き込み
-	std::string read, write, headding; // hder[0]:入力用テープのヘッドの動き、hder[1]:作業用テープの
+	std::string current;
+	std::string read;
+	std::string next;
+	std::string write, headding; // hder[0]:入力用テープのヘッドの動き、hder[1]:作業用テープの
 
 	Tuple(int tapes) {
 		current = "";
-		next = "";
 		read = std::string(tapes, SPECIAL_BLANK);
+		next = "";
 		write = std::string(tapes, SPECIAL_BLANK);
 		headding = std::string(tapes, HEADMOTION_NOMOVE);
 	}
@@ -113,10 +115,14 @@ public:
 public:
 	void program(std::istream &, const bool inputIsReadOnly = true);
 	void initialize(const std::string inputTape);
-	void simulate(std::string, std::string[]);
-	void print(void); //string state);
+	void simulate(void);
+	const Tuple & transition(const Tuple & currentTuple);
 	bool searchin(std::string state, char oninput, char onwork);
 
+	void nextConfiguration(void);
+	const Tape & inputTape(void) { return tapes[0]; }
+
+	void print(void); //string state);
 	void show(std::ostream & stream);
 
 };

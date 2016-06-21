@@ -6,8 +6,8 @@
  */
 
 #include <unistd.h>
-#include <stdlib.h>
-#include <time.h>
+#include <cstdlib>
+#include <ctime>
 
 #include "TuringMachine.h"
 
@@ -111,6 +111,8 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 //		table.size()++;
 	}
 
+	std::srand(std::time(0));
+
 	return;
 }
 
@@ -126,10 +128,12 @@ void TuringMachine::initialize(const std::string inputTape) {
 		tapes[i].headpos = 0;
 	}
 	state = table[0].current; //the initial state
+
+	std::srand(std::time(0)); // seed for nondeterministic transitions
 }
 
 // tapeを読み状態遷移を実行する関数
-void TuringMachine::simulate(std::string input, std::string work[]) {
+void TuringMachine::simulate(void) {
 	// adrs:テープのヘッダの位置、s:現状態、step:ステップ数
 	unsigned int i;
 	int searchOffset, /* adrs[2],*//* s=0, */step = 0; //,undo;
@@ -144,8 +148,7 @@ void TuringMachine::simulate(std::string input, std::string work[]) {
 	// 初期状態の印字
 	std::cout << std::endl << "Step: " << step << " ";
 	print();
-	// 乱数の初期化
-	srand(time(NULL));
+
 	// 状態遷移を行う
 	while (true) {
 		searchOffset = rand() % table.size();
@@ -169,7 +172,7 @@ void TuringMachine::simulate(std::string input, std::string work[]) {
 			}
 		}
 		if ( (unsigned ) i == table.size())
-			break;
+			break;  // halt
 		// preserve the row-in-table number of the tuple
 		i = (searchOffset + i) % table.size();
 		if (c == 'r') {
@@ -222,11 +225,12 @@ void TuringMachine::simulate(std::string input, std::string work[]) {
 	} else {
 		std::cout << "rejected ";
 	}
-	std::cout << "input '" << input << "'." << std::endl << std::endl;
+	std::cout << "input '" << inputTape() << "'." << std::endl << std::endl;
 
 	if (step == 0)
 		exit(0);
 }
+
 
 // ステップ毎の状態を表示する関数
 void TuringMachine::print(void) { //string state){
