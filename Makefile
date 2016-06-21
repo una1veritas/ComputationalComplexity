@@ -1,6 +1,6 @@
 
-CC	= cc
-CXX	= g++
+CC	= /opt/local/bin/gcc 
+CXX	= /opt/local/bin/g++ -std=c++11
 CFLAGS = -Wall -g
 CXXFLAGS = -Wall -g -O
 
@@ -20,4 +20,4 @@ TuringMachine.o: TuringMachine.h TuringMachine.cpp
 clean   :
 	rm -f tm core *.o *~
 
-distclean: clean
+distclean: clean 

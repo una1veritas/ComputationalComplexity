@@ -45,7 +45,7 @@ struct Tuple {
 };
 
 struct Tape {
-	int headpos;
+	unsigned int headpos;
 	std::string content;
 
 	void set(std::string str) {
@@ -83,7 +83,7 @@ struct Tape {
 	}
 
 	friend std::ostream & operator<<(std::ostream & stream, const Tape & tape) {
-		for (int h = 0; h <= tape.length() ; h++) {
+		for (unsigned int h = 0; h <= tape.length() ; h++) {
 			if ( h == tape.headpos ) {
 				stream << "[" << tape.content[h];
 			} else if ( h == tape.headpos+1 ) {

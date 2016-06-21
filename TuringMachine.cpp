@@ -16,7 +16,7 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 
 	std::istringstream strin;
 	std::string buff;
-	int v;
+	//int v;
 	//int k = 0;
 
 	// inspecting the number of tapes
@@ -53,7 +53,7 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 
 	file.clear();
 	file.seekg(0, std::ios::beg);
-	v = 0;
+	//v = 0;
 	bool skipremaining = false;
 	while (!file.eof()) {
 		if ( skipremaining ) break;

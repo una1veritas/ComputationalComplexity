@@ -40,7 +40,7 @@ struct CommandParams {
 	}
 };
 
-int getCommandParams(CommandParams & params, int argc, char * argv[]);
+int getCommandParams(CommandParams & params, unsigned int argc, char * argv[]);
 
 // メイン関数
 int main(int argc, char * argv[]) {
@@ -56,7 +56,7 @@ int main(int argc, char * argv[]) {
 		return 1;
 	}
 
-	file.open(params.programFileName);
+	file.open(params.programFileName, std::ifstream::in);
 	if ( !file.is_open() ) {
 		cerr << "File cannot be opened." << endl;
 		return 1;
@@ -86,7 +86,7 @@ int main(int argc, char * argv[]) {
 }
 
 
-int getCommandParams(CommandParams & params, int argc, char * argv[]) {
+int getCommandParams(CommandParams & params, unsigned int argc, char * argv[]) {
 	unsigned int c;
 	string argstr;
 	for(c = 1; c < argc; c++) {
