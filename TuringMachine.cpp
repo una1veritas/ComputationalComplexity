@@ -231,9 +231,9 @@ void TuringMachine::simulate(void) {
 
 
 // 状態遷移を実行する関数
-bool TuringMachine::nextConfiguration(void) {
-	unsigned int i;
-	int searchOffset, /* adrs[2],*//* s=0, */step = 0; //,undo;
+bool TuringMachine::step(const unsigned int n) {
+	unsigned int index;
+	int searchOffset;
 	std::string acc;
 	std::map<std::string, int>::iterator sitr;
 	std::map<char, int>::iterator hitr;
@@ -242,9 +242,9 @@ bool TuringMachine::nextConfiguration(void) {
 
 	// 状態遷移を行う
 
-	searchOffset = rand() % table.size();
-	for (i = 0; i < table.size(); i++) {
-		Tuple & currentTuple = table[(searchOffset + i) % table.size()];
+	searchOffset = std::rand() % table.size();
+	for (index = 0; index < table.size(); index++) {
+		const Tuple & currentTuple = table[(searchOffset + index) % table.size()];
 		if (currentTuple.current == state) {
 			unsigned int tn;
 			//cerr << currentTuple << endl;
@@ -262,20 +262,20 @@ bool TuringMachine::nextConfiguration(void) {
 				break;
 		}
 	}
-	if ( (unsigned ) i == table.size())
+	if ( (unsigned ) index == table.size())
 		return false;  // halt
 	// preserve the row-in-table number of the tuple
-	i = (searchOffset + i) % table.size();
+	index = (searchOffset + index) % table.size();
 
 	// データの書き換え
 	for (unsigned int k = 0; k < noOfTapes; k++) {
-		if (table[i].write[k] == SPECIAL_THESAME) {
+		if (table[index].write[k] == SPECIAL_THESAME) {
 			//*head[k] = *head[k];
 			// implements this by don't touch
 		} else {
-			tapes[k].head() = table[i].write[k] ;
+			tapes[k].head() = table[index].write[k] ;
 		}
-		switch (table[i].headding[k]) {
+		switch (table[index].headding[k]) {
 		case 'R':
 		case 'r':
 			headd = +1;
@@ -289,9 +289,8 @@ bool TuringMachine::nextConfiguration(void) {
 			break;
 		}
 		tapes[k].move(headd);
-		state = table[i].next;
+		state = table[index].next;
 	}
-	step++;
 
 	return true;
 }

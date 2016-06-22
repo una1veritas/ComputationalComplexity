@@ -107,8 +107,6 @@ public:
 	unsigned int noOfTapes;
 	std::set<std::string> acceptingStates;
 
-	int step;
-
 	TuringMachine(void) { }
 	~TuringMachine(void) { delete [] tapes; }
 
@@ -119,7 +117,7 @@ public:
 	const Tuple & transition(const Tuple & currentTuple);
 //	bool searchin(std::string state, char oninput, char onwork);
 
-	bool nextConfiguration(void);
+	bool step(const unsigned int n = 1);
 	const Tape & inputTape(void) { return tapes[0]; }
 
 	void print(void); //string state);

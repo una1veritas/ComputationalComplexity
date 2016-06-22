@@ -22,6 +22,8 @@
 #include <vector>
 #include <stack>
 
+#include <unistd.h>
+
 #include "TuringMachine.h"
 
 using namespace std;
@@ -80,6 +82,21 @@ int main(int argc, char * argv[]) {
 			<< " Exit                 -> 'e'" << endl << endl;
 
 	tm.initialize(params.inputTape);
+	char c = 'n';
+	do {
+		tm.print();
+		if (c != 's' && c != 'c') {
+			// make prompt
+			std::cout << ">> " ;
+			std::cin.get(c);
+		}
+		if ( c == 'e' ) {
+			break;
+		} else if ( c == 'c' ) {
+			//Sleep(750);
+			usleep(250000);
+		}
+	} while ( tm.step() );
 	tm.simulate();
 
 	return 0;

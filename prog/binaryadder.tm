@@ -21,4 +21,4 @@ addc 	_ 1 addc	N 	0 R
 addc 	1 0 addc 	R 	0 R
 addc 	1 _ addc 	R 	0 R
 addc 	1 1 addc 	R 	1 R
-add 	_ _ stop	N 	_ N
+add 	_ _ !stop	N 	_ N
