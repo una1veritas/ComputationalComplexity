@@ -111,8 +111,6 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 //		table.size()++;
 	}
 
-	std::srand(std::time(0));
-
 	return;
 }
 
@@ -232,6 +230,72 @@ void TuringMachine::simulate(void) {
 }
 
 
+// 状態遷移を実行する関数
+bool TuringMachine::nextConfiguration(void) {
+	unsigned int i;
+	int searchOffset, /* adrs[2],*//* s=0, */step = 0; //,undo;
+	std::string acc;
+	std::map<std::string, int>::iterator sitr;
+	std::map<char, int>::iterator hitr;
+
+	int headd;
+
+	// 状態遷移を行う
+
+	searchOffset = rand() % table.size();
+	for (i = 0; i < table.size(); i++) {
+		Tuple & currentTuple = table[(searchOffset + i) % table.size()];
+		if (currentTuple.current == state) {
+			unsigned int tn;
+			//cerr << currentTuple << endl;
+			std::string expectstr(""), headstr("");
+			for (tn = 0; tn < noOfTapes; tn++) {
+				if ( currentTuple.read[tn] == SPECIAL_DONTCARE ) {
+					expectstr += tapes[tn].head();
+				} else {
+					expectstr += currentTuple.read[tn];
+				}
+				headstr += tapes[tn].head();
+			}
+			//cerr << expectstr << " - " << headstr << endl;
+			if ( headstr == expectstr)
+				break;
+		}
+	}
+	if ( (unsigned ) i == table.size())
+		return false;  // halt
+	// preserve the row-in-table number of the tuple
+	i = (searchOffset + i) % table.size();
+
+	// データの書き換え
+	for (unsigned int k = 0; k < noOfTapes; k++) {
+		if (table[i].write[k] == SPECIAL_THESAME) {
+			//*head[k] = *head[k];
+			// implements this by don't touch
+		} else {
+			tapes[k].head() = table[i].write[k] ;
+		}
+		switch (table[i].headding[k]) {
+		case 'R':
+		case 'r':
+			headd = +1;
+			break;
+		case 'L':
+		case 'l':
+			headd = -1;
+			break;
+		default: // 'N' or 'n'
+			headd = 0;
+			break;
+		}
+		tapes[k].move(headd);
+		state = table[i].next;
+	}
+	step++;
+
+	return true;
+}
+
 // ステップ毎の状態を表示する関数
 void TuringMachine::print(void) { //string state){
 
@@ -254,6 +318,7 @@ void TuringMachine::print(void) { //string state){
 
 }
 
+/*
 bool TuringMachine::searchin(std::string s, char in, char wk) {
 
 	for (unsigned int i = 0; i < table.size(); i++)
@@ -262,6 +327,7 @@ bool TuringMachine::searchin(std::string s, char in, char wk) {
 			return true;
 	return false;
 }
+*/
 
 void TuringMachine::show(std::ostream & stream) {
 	stream << "---Transition table---" << std::endl;

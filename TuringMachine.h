@@ -117,9 +117,9 @@ public:
 	void initialize(const std::string inputTape);
 	void simulate(void);
 	const Tuple & transition(const Tuple & currentTuple);
-	bool searchin(std::string state, char oninput, char onwork);
+//	bool searchin(std::string state, char oninput, char onwork);
 
-	void nextConfiguration(void);
+	bool nextConfiguration(void);
 	const Tape & inputTape(void) { return tapes[0]; }
 
 	void print(void); //string state);
