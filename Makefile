@@ -1,6 +1,5 @@
-
-CC	= /opt/local/bin/gcc 
-CXX	= /opt/local/bin/g++ -std=c++11
+CC	= gcc 
+CXX	= g++ -std=c++11
 CFLAGS = -Wall -g
 CXXFLAGS = -Wall -g -O
 
