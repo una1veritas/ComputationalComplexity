@@ -73,13 +73,9 @@ int main(int argc, char * argv[]) {
 	cout << endl << endl;
 
 	// シミュレート実行
-	cout
-	//		<< " Redo      -> 'r'" << endl
-	<< " Go next step         -> '[return]'" << endl
-//		<< " Undo      -> 'u'" << endl
-			<< " Continue until halt  -> 'c'" << endl
-//		<< " Traverse  -> 't'" << endl
-			<< " Exit                 -> 'e'" << endl << endl;
+	cout << " Go next step         -> '[return]'" << endl
+		<<  " Continue until halt  -> 'c'" << endl
+		<<  " Exit                 -> 'e'" << endl << endl;
 
 	tm.initialize(params.inputTape);
 	char c = 'n';
@@ -97,7 +93,13 @@ int main(int argc, char * argv[]) {
 			usleep(250000);
 		}
 	} while ( tm.step() );
-	tm.simulate();
+	std::cout << std::endl << "The Machine has stopped at the state '" << tm.stateName() << "' and " << std::endl;
+	if ( tm.isAccepted() ) {
+		std::cout << "accepted ";
+	} else {
+		std::cout << "rejected ";
+	}
+	std::cout << "input '" << tm.inputTape() << "'." << std::endl << std::endl;
 
 	return 0;
 }

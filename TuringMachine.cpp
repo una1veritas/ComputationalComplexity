@@ -16,12 +16,9 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 
 	std::istringstream strin;
 	std::string buff;
-	//int v;
-	//int k = 0;
 
 	// inspecting the number of tapes
 	std::string dummy;
-//	char tapealphabet;
 	unsigned int c = 0;
 	std::set<std::string> states;
 
@@ -53,7 +50,6 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 
 	file.clear();
 	file.seekg(0, std::ios::beg);
-	//v = 0;
 	bool skipremaining = false;
 	while (!file.eof()) {
 		if ( skipremaining ) break;
@@ -67,13 +63,21 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 			continue;
 
 		table.push_back(Tuple(noOfTapes));
+		// the 1st element
 		strin >> table.back().current;
-		for (c = 0; c < noOfTapes; c++)
+		for (c = 0; c < noOfTapes; c++) {
+			// the readout of (c+1)th tape
 			strin >> table.back().read[c];
-		strin >> table.back().next;
+		}
+		// the next state
+		std::string elem;
+		strin >> elem;
 		if (table.back().next[0] == '!') {
-			table.back().next = (std::string) table.back().next.substr(1, table.back().next.size());
+			// a final state
+			table.back().next = elem.substr(1, elem.size());
 			acceptingStates.insert(table.back().next);
+		} else {
+			table.back().next = elem;
 		}
 		for (c = 0; c < noOfTapes; c++) {
 			if ( c == 0 && inputIsReadOnly ) {
@@ -83,7 +87,6 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 			}
 			strin >> table.back().headding[c];
 		}
-		//cerr << table[table.size()].read[0] << ", " << table[table.size()].read[1] << endl;
 		if (file.eof())
 			break;
 #ifdef FALSE
@@ -130,6 +133,7 @@ void TuringMachine::initialize(const std::string inputTape) {
 	std::srand(std::time(0)); // seed for nondeterministic transitions
 }
 
+#ifdef SIMULATE
 // tapeを読み状態遷移を実行する関数
 void TuringMachine::simulate(void) {
 	// adrs:テープのヘッダの位置、s:現状態、step:ステップ数
@@ -228,48 +232,55 @@ void TuringMachine::simulate(void) {
 	if (step == 0)
 		exit(0);
 }
-
+#endif
 
 // 状態遷移を実行する関数
 bool TuringMachine::step(const unsigned int n) {
-	unsigned int index;
-	int searchOffset;
 	std::string acc;
 	std::map<std::string, int>::iterator sitr;
 	std::map<char, int>::iterator hitr;
-
 	int headd;
+	unsigned int index, soffset;
 
-	// 状態遷移を行う
-
-	searchOffset = std::rand() % table.size();
+	std::string expect, read;
+	soffset = 0; //soffset = std::rand() % table.size();
 	for (index = 0; index < table.size(); index++) {
-		const Tuple & currentTuple = table[(searchOffset + index) % table.size()];
-		if (currentTuple.current == state) {
-			unsigned int tn;
-			//cerr << currentTuple << endl;
-			std::string expectstr(""), headstr("");
-			for (tn = 0; tn < noOfTapes; tn++) {
-				if ( currentTuple.read[tn] == SPECIAL_DONTCARE ) {
-					expectstr += tapes[tn].head();
-				} else {
-					expectstr += currentTuple.read[tn];
-				}
-				headstr += tapes[tn].head();
+		const Tuple & currentTuple = table[(soffset + index) % table.size()];
+		if (currentTuple.current != state)
+			continue;
+		//cerr << currentTuple << endl;
+		expect.clear() ;
+		read.clear();
+		unsigned int tn;
+		for (tn = 0; tn < noOfTapes; tn++) {
+			if ( currentTuple.read[tn] == SPECIAL_DONTCARE ) {
+				expect += tapes[tn].head();
+			} else {
+				expect += currentTuple.read[tn];
 			}
-			//cerr << expectstr << " - " << headstr << endl;
-			if ( headstr == expectstr)
-				break;
+			read += tapes[tn].head();
+		}
+		if ( read == expect ) {
+			// std::cout << "expect: " << expect << " - read: " << read << std::endl;
+			break;
 		}
 	}
-	if ( (unsigned ) index == table.size())
+	// std::cout << "index = " << index << " size = " << table.size() << std::endl;
+	if ( index == table.size() )
 		return false;  // halt
 	// preserve the row-in-table number of the tuple
-	index = (searchOffset + index) % table.size();
+	index = (soffset + index) % table.size();
 
 	// データの書き換え
 	for (unsigned int k = 0; k < noOfTapes; k++) {
 		if (table[index].write[k] == SPECIAL_THESAME) {
+			unsigned int tn;
+			for(tn = 0; tn < noOfTapes; tn++) {
+				if ( table[index].read[tn] == SPECIAL_DONTCARE )
+					break;
+			}
+			if ( tn < noOfTapes )
+				tapes[k].head() = read[tn];
 			//*head[k] = *head[k];
 			// implements this by don't touch
 		} else {
@@ -293,6 +304,11 @@ bool TuringMachine::step(const unsigned int n) {
 	}
 
 	return true;
+}
+
+
+const bool TuringMachine::isAccepted(void) {
+	return 	tapes[0].headAtTheEnd() &&  (acceptingStates.find(state) != acceptingStates.end());
 }
 
 // ステップ毎の状態を表示する関数
