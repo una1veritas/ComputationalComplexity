@@ -18,5 +18,7 @@ TuringMachine.o: TuringMachine.h TuringMachine.cpp
 
 clean   :
 	rm -f tm core *.o *~
+	rm -f *.dSym
+	rm -r RemoteSystemsTempFiles
 
 distclean: clean 
