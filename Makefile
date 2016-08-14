@@ -1,24 +1,22 @@
-CC	= gcc 
-CXX	= g++ -std=c++11
-CFLAGS = -Wall -g
-CXXFLAGS = -Wall -g -O
+CC = gcc
+CXX = g++
+
+CFLAGS = -Wall -O0 -g3
+CXXFLAGS = -Wall -O0 -g3
+INCLUDES = -I./ 
 
 %.o: %.cpp
-	$(CXX) -c $(CXXFLAGS) $<
-
-
-TMOBJS = TuringMachine.o tm.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $<
 
 all: tm
 
-tm: $(TMOBJS)
-	$(CXX) $(CXXFLAGS) $(TMOBJS) -o tm
+tm: tm.o TuringMachine.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES)  tm.o TuringMachine.o -o $@
+	
+tm.o: TuringMachine.h
 
-TuringMachine.o: TuringMachine.h TuringMachine.cpp
+TuringMachine.o: TuringMachine.h
 
-clean   :
-	rm -f tm core *.o *~
-	rm -f *.dSYM
-	rm -r RemoteSystemsTempFiles
-
-distclean: clean 
+clean:
+	¥rm tm.o TuringMachine.o
+	
