@@ -1,9 +1,9 @@
 {
   "version": "v1",
-  "title": "Eclipse Automated Error Reporting Service",
-  "timestamp": 1466050176309,
+  "title": "Eclipse Automated Error Reporting",
+  "timestamp": 1471156387903,
   "ttl": 10080,
-  "helpUrl": "https://wiki.eclipse.org/EPP/Logging",
+  "helpUrl": "https://dev.eclipse.org/recommenders/community/aeri/v2/help/",
   "feedbackUrl": "http://ctrlflow.com/automated-error-reporting",
   "aboutUrl": "https://wiki.eclipse.org/EPP/Logging",
   "submitUrl": "https://dev.eclipse.org/recommenders/community/confess/0.6/reports/",
@@ -13,21 +13,29 @@
   "connectTimeout": 10,
   "socketTimeout": 10,
   "acceptedProducts": [
-    "org.eclipse.*"
+    "org.eclipse.*",
+    "org.fordiac.*"
   ],
   "acceptedPlugins": [
     "org.apache.log4j.*",
-    "org.eclipse.*"
+    "org.eclipse.*",
+    "org.fordiac.*"
   ],
   "acceptedPackages": [
     "ch.qos.*",
+    "com.cforcoding.*",
+    "com.ctrlflow.*",
     "com.google.*",
+    "com.gradleware.tooling.*",
+    "com.naef.*",
     "com.sun.*",
     "java.*",
     "javafx.*",
     "javax.*",
     "org.apache.*",
     "org.eclipse.*",
+    "org.fordiac.*",
+    "org.gradle.*",
     "org.osgi.*",
     "org.slf4j.*",
     "sun.*"
@@ -35,9 +43,8 @@
   "acceptOtherPackages": true,
   "acceptUiFreezes": true,
   "ignoredStatuses": [
-    ":java.net.SocketException:",
-    ":java.net.SocketTimeoutException:",
-    ":java.net.UnknownHostException:",
+    ":java.io.IOException:There is not enough space on the disk",
+    ":java.net.*:",
     "org.eclipse.core.filesystem::Could not delete*",
     "org.eclipse.core.filesystem::Could not move*",
     "org.eclipse.core.runtime::Invalid input url*",
@@ -48,5 +55,5 @@
     "org.eclipse.pde.core::The current target platform contains errors*",
     "org.eclipse.ui::Conflicting handlers for*"
   ],
-  "problemsZipLastDownloadTimestamp": 1466050199929
+  "problemsZipLastDownloadTimestamp": 1471156405501
 }
