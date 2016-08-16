@@ -80,7 +80,8 @@ int main(int argc, char * argv[]) {
 	tm.initialize(params.inputTape);
 	char c = 'n';
 	do {
-		tm.print();
+		tm.showConfiguration(std::cout);
+		std::cout << std::endl;
 		if (c != 's' && c != 'c') {
 			// make prompt
 			std::cout << ">> " ;

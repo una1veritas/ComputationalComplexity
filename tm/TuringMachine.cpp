@@ -11,7 +11,7 @@
 
 #include "TuringMachine.h"
 
-// 状態遷移表のチェックと行数の確認
+// 迥ｶ諷矩�ｷ遘ｻ陦ｨ縺ｮ繝√ぉ繝�繧ｯ縺ｨ陦梧焚縺ｮ遒ｺ隱�
 void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 
 	std::istringstream strin;
@@ -72,9 +72,9 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 		// the next state
 		std::string elem;
 		strin >> elem;
-		if (table.back().next[0] == '!') {
+		if (*elem.rbegin() == '!') {
 			// a final state
-			table.back().next = elem.substr(1, elem.size());
+			table.back().next = elem.substr(0, elem.length() - 1);
 			acceptingStates.insert(table.back().next);
 		} else {
 			table.back().next = elem;
@@ -94,7 +94,7 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 		if (states.count(table.back().current) == 0)
 			std::cerr << "Error!!" << std::endl << std::flush;
 #endif
-		// テープ記号がアルファベットもしくは数字かをチェック。
+		// 繝�繝ｼ繝苓ｨ伜捷縺後い繝ｫ繝輔ぃ繝吶ャ繝医ｂ縺励￥縺ｯ謨ｰ蟄励°繧偵メ繧ｧ繝�繧ｯ縲�
 		for (c = 0; c < noOfTapes; c++) {
 			if (!(isgraph(table.back().read[c])
 					&& isgraph(table.back().write[c]))) {
@@ -110,7 +110,7 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 				exit(1);
 			}
 		}
-		// 遷移がR,L,Nのいずれかになっているかをチェック。
+		// 驕ｷ遘ｻ縺軍,L,N縺ｮ縺�縺壹ｌ縺九↓縺ｪ縺｣縺ｦ縺�繧九°繧偵メ繧ｧ繝�繧ｯ縲�
 //		table.size()++;
 	}
 
@@ -134,9 +134,9 @@ void TuringMachine::initialize(const std::string inputTape) {
 }
 
 #ifdef SIMULATE
-// tapeを読み状態遷移を実行する関数
+// tape繧定ｪｭ縺ｿ迥ｶ諷矩�ｷ遘ｻ繧貞ｮ溯｡後☆繧矩未謨ｰ
 void TuringMachine::simulate(void) {
-	// adrs:テープのヘッダの位置、s:現状態、step:ステップ数
+	// adrs:繝�繝ｼ繝励�ｮ繝倥ャ繝�縺ｮ菴咲ｽｮ縲《:迴ｾ迥ｶ諷九�《tep:繧ｹ繝�繝�繝玲焚
 	unsigned int i;
 	int searchOffset, /* adrs[2],*//* s=0, */step = 0; //,undo;
 	char c = 'n';
@@ -147,11 +147,11 @@ void TuringMachine::simulate(void) {
 
 	int headd;
 
-	// 初期状態の印字
+	// 蛻晄悄迥ｶ諷九�ｮ蜊ｰ蟄�
 	std::cout << std::endl << "Step: " << step << " ";
 	print();
 
-	// 状態遷移を行う
+	// 迥ｶ諷矩�ｷ遘ｻ繧定｡後≧
 	while (true) {
 		searchOffset = rand() % table.size();
 		for (i = 0; i < table.size(); i++) {
@@ -192,7 +192,7 @@ void TuringMachine::simulate(void) {
 			break;
 		}
 
-		// データの書き換え
+		// 繝�繝ｼ繧ｿ縺ｮ譖ｸ縺肴鋤縺�
 		for (unsigned int k = 0; k < noOfTapes; k++) {
 			if (table[i].write[k] == SPECIAL_THESAME) {
 				//*head[k] = *head[k];
@@ -234,7 +234,7 @@ void TuringMachine::simulate(void) {
 }
 #endif
 
-// 状態遷移を実行する関数
+// 迥ｶ諷矩�ｷ遘ｻ繧貞ｮ溯｡後☆繧矩未謨ｰ
 bool TuringMachine::step(const unsigned int n) {
 	std::string acc;
 	std::map<std::string, int>::iterator sitr;
@@ -271,7 +271,7 @@ bool TuringMachine::step(const unsigned int n) {
 	// preserve the row-in-table number of the tuple
 	index = (soffset + index) % table.size();
 
-	// データの書き換え
+	// 繝�繝ｼ繧ｿ縺ｮ譖ｸ縺肴鋤縺�
 	for (unsigned int k = 0; k < noOfTapes; k++) {
 		if (table[index].write[k] == SPECIAL_THESAME) {
 			unsigned int tn;
@@ -311,26 +311,50 @@ const bool TuringMachine::isAccepted(void) {
 	return 	tapes[0].headAtTheEnd() &&  (acceptingStates.find(state) != acceptingStates.end());
 }
 
-// ステップ毎の状態を表示する関数
+// 繧ｹ繝�繝�繝玲ｯ弱�ｮ迥ｶ諷九ｒ陦ｨ遉ｺ縺吶ｋ髢｢謨ｰ
 void TuringMachine::print(void) { //string state){
 
-	// 状態の表示
+	// 迥ｶ諷九�ｮ陦ｨ遉ｺ
 	if ( acceptingStates.find(state) != acceptingStates.end() )
 		std::cout << "Accepting ";
 	std::cout << std::endl;
 	std::cout << "State: " << state << std::endl;
 
-	// 入力用テープの表示
+	// 蜈･蜉帷畑繝�繝ｼ繝励�ｮ陦ｨ遉ｺ
 	std::cout << "Input tape: " << std::endl;
 	std::cout << tapes[0] << std::endl;
 
-	// 作業用テープの表示
+	// 菴懈･ｭ逕ｨ繝�繝ｼ繝励�ｮ陦ｨ遉ｺ
 	std::cout << "Working tape:";
 	for (unsigned int tn = 1; tn < noOfTapes; tn++) {
 		std::cout << std::endl << tapes[tn];
 	}
 	std::cout << std::endl;
 
+}
+
+// 計算状況（時点表示）のみの表示
+std::ostream & TuringMachine::showConfiguration(std::ostream & stream) {
+
+	// 状態
+	stream << "(";
+	stream << state;
+	if ( acceptingStates.find(state) != acceptingStates.end() )
+		stream << "!";
+	stream << ", ";
+
+	// 入力テープ
+	stream << tapes[0] << ", ";
+
+	// 作業用テープ
+	for (unsigned int tn = 1; tn < noOfTapes; tn++) {
+		stream<< tapes[tn];
+		if ( tn + 1 == noOfTapes )
+			continue;
+		stream << ", ";
+	}
+	stream << ")";
+	return stream;
 }
 
 /*

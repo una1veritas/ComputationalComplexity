@@ -14,7 +14,7 @@
 #include <stack>
 
 
-static const char SPECIAL_BLANK = '_';
+static const char SPECIAL_BLANK = 'B';
 static const char SPECIAL_DONTCARE = '?';
 static const char SPECIAL_THESAME = '?';
 
@@ -64,12 +64,12 @@ struct Tape {
 		headdir = (headdir < 0 ? -1 : 1 );
 
 		if ( headpos == 0 && headdir == -1) {
-			content = std::string("_") + content;
+			content = std::string("") + SPECIAL_BLANK + content;
 			headpos = 0;
 		} else {
 			headpos += headdir;
 			if ( headpos == length() )
-				content += "_";
+				content += SPECIAL_BLANK;
 		}
 		return tmp;
 	}
@@ -128,6 +128,7 @@ public:
 	const Tape & inputTape(void) { return tapes[0]; }
 
 	void print(void); //string state);
+	std::ostream & showConfiguration(std::ostream & ); //string state);
 	void show(std::ostream & stream);
 
 };
