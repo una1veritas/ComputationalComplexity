@@ -14,7 +14,7 @@
 #include <stack>
 
 
-static const char SPECIAL_BLANK = 'B';
+static const char SPECIAL_BLANK = '_';
 static const char SPECIAL_DONTCARE = '?';
 static const char SPECIAL_THESAME = '?';
 
