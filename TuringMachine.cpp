@@ -12,7 +12,7 @@
 #include "TuringMachine.h"
 
 //
-void TuringMachine::program(std::istream & file, const char blank, const bool inputIsReadOnly) {
+void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 
 	std::istringstream strin;
 	std::string buff;
@@ -117,16 +117,15 @@ void TuringMachine::program(std::istream & file, const char blank, const bool in
 	return;
 }
 
-void TuringMachine::initialize(const std::string inputTape) {
-
+void TuringMachine::initialize(const std::string inputTape, const char blank) {
+	blankSymbol = blank;
 	tapes = new Tape[noOfTapes];
-	tapes[0].set(inputTape, blankSymbol);
+	tapes[0].set(inputTape, 0, blankSymbol);
 	if ( inputTape.length() == 0 )
-		tapes[0].content += SPECIAL_BLANK;
+		tapes[0].content += blankSymbol;
 	//cerr << head[0] << "," << input.begin()<< endl;
 	for(unsigned int i = 1; i < noOfTapes; i++) {
-		tapes[i].content += SPECIAL_BLANK;
-		tapes[i].headpos = 0;
+		tapes[i].set(tapes[i].content + blankSymbol, tapes[i].headpos, blankSymbol);
 	}
 	state = table[0].current; //the initial state
 
@@ -234,7 +233,7 @@ void TuringMachine::simulate(void) {
 }
 #endif
 
-// 迥ｶ諷矩�ｷ遘ｻ繧貞ｮ溯｡後☆繧矩未謨ｰ
+//
 bool TuringMachine::step(const unsigned int n) {
 	std::string acc;
 	std::map<std::string, int>::iterator sitr;
@@ -271,7 +270,7 @@ bool TuringMachine::step(const unsigned int n) {
 	// preserve the row-in-table number of the tuple
 	index = (soffset + index) % table.size();
 
-	// 繝�繝ｼ繧ｿ縺ｮ譖ｸ縺肴鋤縺�
+	//
 	for (unsigned int k = 0; k < noOfTapes; k++) {
 		if (table[index].write[k] == SPECIAL_THESAME) {
 			unsigned int tn;
@@ -311,20 +310,20 @@ const bool TuringMachine::isAccepted(void) {
 	return 	tapes[0].headAtTheEnd() &&  (acceptingStates.find(state) != acceptingStates.end());
 }
 
-// 繧ｹ繝�繝�繝玲ｯ弱�ｮ迥ｶ諷九ｒ陦ｨ遉ｺ縺吶ｋ髢｢謨ｰ
+//
 void TuringMachine::print(void) { //string state){
 
-	// 迥ｶ諷九�ｮ陦ｨ遉ｺ
+	//
 	if ( acceptingStates.find(state) != acceptingStates.end() )
 		std::cout << "Accepting ";
 	std::cout << std::endl;
 	std::cout << "State: " << state << std::endl;
 
-	// 蜈･蜉帷畑繝�繝ｼ繝励�ｮ陦ｨ遉ｺ
+	//
 	std::cout << "Input tape: " << std::endl;
 	std::cout << tapes[0] << std::endl;
 
-	// 菴懈･ｭ逕ｨ繝�繝ｼ繝励�ｮ陦ｨ遉ｺ
+	//
 	std::cout << "Working tape:";
 	for (unsigned int tn = 1; tn < noOfTapes; tn++) {
 		std::cout << std::endl << tapes[tn];
@@ -337,23 +336,24 @@ void TuringMachine::print(void) { //string state){
 std::ostream & TuringMachine::showConfiguration(std::ostream & stream) {
 
 	// 状態
-	stream << "(";
+	stream << "( ";
 	stream << state;
 	if ( acceptingStates.find(state) != acceptingStates.end() )
 		stream << "!";
-	stream << ", ";
+	stream << ", " ;
 
 	// 入力テープ
 	stream << tapes[0] << ", ";
 
 	// 作業用テープ
 	for (unsigned int tn = 1; tn < noOfTapes; tn++) {
+		stream << std::endl << "\t";
 		stream<< tapes[tn];
 		if ( tn + 1 == noOfTapes )
 			continue;
 		stream << ", ";
 	}
-	stream << ")";
+	stream << " )";
 	return stream;
 }
 

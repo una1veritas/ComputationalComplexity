@@ -15,8 +15,8 @@
 
 
 static const char SPECIAL_BLANK = '_';
-static const char SPECIAL_DONTCARE = '?';
-static const char SPECIAL_THESAME = '?';
+static const char SPECIAL_DONTCARE = '*';
+static const char SPECIAL_THESAME = '*';
 
 static const char HEADMOTION_NOMOVE = 'N';
 static const char HEADMOTION_RIGHT = 'R';
@@ -49,8 +49,10 @@ struct Tape {
 	std::string content;
 	char blank;
 
-	void set(std::string str, char sp = SPECIAL_BLANK) {
-		headpos = 0;
+	Tape(const char sp = SPECIAL_BLANK) : headpos(0), content(""), blank(sp) {}
+
+	void set(const std::string str, const unsigned int hpos = 0, const char sp = SPECIAL_BLANK) {
+		headpos = hpos;
 		content = str;
 		blank = sp;
 	}
@@ -70,8 +72,10 @@ struct Tape {
 			headpos = 0;
 		} else {
 			headpos += headdir;
-			if ( headpos == length() )
+			if ( headpos == length() ) {
+				//std::cerr << "adding " << blank << std::endl;
 				content += blank;
+			}
 		}
 		return tmp;
 	}

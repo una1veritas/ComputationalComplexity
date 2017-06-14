@@ -1,5 +1,5 @@
 CC = gcc
-CXX = g++
+CXX = g++ -std=c++11
 
 CFLAGS = -Wall -O0 -g3
 CXXFLAGS = -Wall -O0 -g3
@@ -12,11 +12,10 @@ all: tm.exe
 
 tm.exe: tm.o TuringMachine.o
 	$(CXX) $(CXXFLAGS) $(INCLUDES)  tm.o TuringMachine.o -o $@
-	
+
 tm.o: TuringMachine.h
 
 TuringMachine.o: TuringMachine.h
 
 clean:
-	¥rm tm.exe tm.o TuringMachine.o
-	
+	rm -f tm.exe tm.o TuringMachine.o

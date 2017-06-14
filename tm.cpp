@@ -32,8 +32,10 @@ struct CommandParams {
 	string programFileName;
 	string inputTape;
 	bool inputIsReadOnly;
+	char blankSymbol;
 
-	CommandParams(void) : programFileName(""), inputTape(""), inputIsReadOnly(true) {}
+	CommandParams(void) :
+		programFileName(""), inputTape(""), inputIsReadOnly(true), blankSymbol(SPECIAL_BLANK) {}
 
 	friend ostream & operator<<(ostream & stream, const CommandParams & obj) {
 		stream << obj.programFileName << ", " << obj.inputTape << ", " << (obj.inputIsReadOnly ? "true" : "false")
@@ -107,16 +109,19 @@ int main(int argc, char * argv[]) {
 
 
 int getCommandParams(CommandParams & params, unsigned int argc, char * argv[]) {
-	unsigned int c;
+	unsigned int i;
 	string argstr;
-	for(c = 1; c < argc; c++) {
-		argstr = argv[c];
+	for(i = 1; i < argc; i++) {
+		argstr = argv[i];
 		if ( argstr[0] == '-' ) {
 			if (argstr == "-rw") {
 				params.inputIsReadOnly = false;
 				continue;
 			} else if  (argstr == "-ro") {
 				params.inputIsReadOnly = true;
+				continue;
+			} else if  (argstr.compare(0, 4, "-sp=") == 0 ) {
+				params.blankSymbol = argstr[4];
 				continue;
 			}
 			// not an option.
