@@ -28,11 +28,11 @@ struct Tuple {
 	std::string next;
 	std::string write, headding; // hder[0]:入力用テープのヘッドの動き、hder[1]:作業用テープの
 
-	Tuple(int tapes) {
+	Tuple(int tapes, char blank = SPECIAL_BLANK) {
 		current = "";
-		read = std::string(tapes, SPECIAL_BLANK);
+		read = std::string(tapes, blank);
 		next = "";
-		write = std::string(tapes, SPECIAL_BLANK);
+		write = std::string(tapes, blank);
 		headding = std::string(tapes, HEADMOTION_NOMOVE);
 	}
 
@@ -47,10 +47,12 @@ struct Tuple {
 struct Tape {
 	unsigned int headpos;
 	std::string content;
+	char blank;
 
-	void set(std::string str) {
+	void set(std::string str, char sp = SPECIAL_BLANK) {
 		headpos = 0;
 		content = str;
+		blank = sp;
 	}
 
 	char & head(void) {
@@ -64,12 +66,12 @@ struct Tape {
 		headdir = (headdir < 0 ? -1 : 1 );
 
 		if ( headpos == 0 && headdir == -1) {
-			content = std::string("") + SPECIAL_BLANK + content;
+			content = std::string("") + blank + content;
 			headpos = 0;
 		} else {
 			headpos += headdir;
 			if ( headpos == length() )
-				content += SPECIAL_BLANK;
+				content += blank;
 		}
 		return tmp;
 	}
@@ -106,6 +108,7 @@ struct TuringMachine {
 private:
 	std::string state;
 	Tape * tapes;
+	char blankSymbol;
 
 public:
 	std::vector<Tuple> table;
@@ -117,7 +120,7 @@ public:
 
 public:
 	void program(std::istream &, const bool inputIsReadOnly = true);
-	void initialize(const std::string inputTape);
+	void initialize(const std::string inputTape, const char blank = SPECIAL_BLANK);
 //	void simulate(void);
 	const Tuple & transition(const Tuple & currentTuple);
 //	bool searchin(std::string state, char oninput, char onwork);

@@ -12,7 +12,7 @@
 #include "TuringMachine.h"
 
 //
-void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
+void TuringMachine::program(std::istream & file, const char blank, const bool inputIsReadOnly) {
 
 	std::istringstream strin;
 	std::string buff;
@@ -94,7 +94,7 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 		if (states.count(table.back().current) == 0)
 			std::cerr << "Error!!" << std::endl << std::flush;
 #endif
-		// 繝�繝ｼ繝苓ｨ伜捷縺後い繝ｫ繝輔ぃ繝吶ャ繝医ｂ縺励￥縺ｯ謨ｰ蟄励°繧偵メ繧ｧ繝�繧ｯ縲�
+		//
 		for (c = 0; c < noOfTapes; c++) {
 			if (!(isgraph(table.back().read[c])
 					&& isgraph(table.back().write[c]))) {
@@ -110,7 +110,7 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 				exit(1);
 			}
 		}
-		// 驕ｷ遘ｻ縺軍,L,N縺ｮ縺�縺壹ｌ縺九↓縺ｪ縺｣縺ｦ縺�繧九°繧偵メ繧ｧ繝�繧ｯ縲�
+		//
 //		table.size()++;
 	}
 
@@ -120,7 +120,7 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 void TuringMachine::initialize(const std::string inputTape) {
 
 	tapes = new Tape[noOfTapes];
-	tapes[0].set(inputTape);
+	tapes[0].set(inputTape, blankSymbol);
 	if ( inputTape.length() == 0 )
 		tapes[0].content += SPECIAL_BLANK;
 	//cerr << head[0] << "," << input.begin()<< endl;
