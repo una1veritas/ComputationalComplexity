@@ -353,7 +353,7 @@ std::ostream & TuringMachine::showConfiguration(std::ostream & stream) {
 			continue;
 		stream << ", ";
 	}
-	stream << " )";
+	stream << " )" << std::endl;
 	return stream;
 }
 

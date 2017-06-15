@@ -2,6 +2,7 @@
 #.cproject
 .metadata
 
+*.exe
 *.o
 *~
 *.dSYM
