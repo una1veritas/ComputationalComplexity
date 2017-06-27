@@ -2,7 +2,6 @@ prog:start # _ _  !prog:end  N * N * N
 prog:start 0 _ _  incr1:crr  N * N * N
 prog:start 1 _ _  incr1:crr  N * N * N
 
-
 incr1:crr * 1 *	incr1:crr  N 0 R * N
 incr1:crr * _ *	incr1:rew  N 1 L * N
 incr1:crr * 0 *	incr1:rew  N 1 L * N
