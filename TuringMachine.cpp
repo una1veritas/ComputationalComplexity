@@ -273,13 +273,7 @@ bool TuringMachine::step(const unsigned int n) {
 	//
 	for (unsigned int k = 0; k < noOfTapes; k++) {
 		if (table[index].write[k] == SPECIAL_THESAME) {
-			unsigned int tn;
-			for(tn = 0; tn < noOfTapes; tn++) {
-				if ( table[index].read[tn] == SPECIAL_DONTCARE )
-					break;
-			}
-			if ( tn < noOfTapes )
-				tapes[k].head() = read[tn];
+			tapes[k].head() = read[k];
 			//*head[k] = *head[k];
 			// implements this by don't touch
 		} else {
