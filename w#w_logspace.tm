@@ -1,23 +1,23 @@
 prog:start # _ _  !prog:end  N * N * N
-prog:start 0 _ _  incr1:crr  N * N * N
-prog:start 1 _ _  incr1:crr  N * N * N
+prog:start 0 _ _  incr:crr  N * N * N
+prog:start 1 _ _  incr:crr  N * N * N
 
-incr1:crr * 1 *	incr1:crr  N 0 R * N
-incr1:crr * _ *	incr1:rew  N 1 L * N
-incr1:crr * 0 *	incr1:rew  N 1 L * N
-incr1:rew * 0 *	incr1:rew  N 0 L * N
-incr1:rew * _ *	incr1:end  N _ R * N
+incr:crr * 1 *	incr:crr  N 0 R * N
+incr:crr * _ *	incr:rew  N 1 L * N
+incr:crr * 0 *	incr:rew  N 1 L * N
+incr:rew * 0 *	incr:rew  N 0 L * N
+incr:rew * _ *	incr:end  N _ R * N
 
-incr1:end * * *	mov1_2:cpy  N * N * N
+incr:end * * *	move:cpy  N * N * N
 
-mov1_2:cpy * 0 _ mov1_2:cpy  N 0 R 0 R
-mov1_2:cpy * 1 _ mov1_2:cpy  N 1 R 1 R
-mov1_2:cpy * _ _ mov1_2:rew  N _ L _ L
-mov1_2:rew * 0 0 mov1_2:rew  N 0 L 0 L
-mov1_2:rew * 1 1 mov1_2:rew  N 1 L 1 L
-mov1_2:rew * _ _ mov1_2:end  N _ R _ R
+move:cpy * 0 _ move:cpy  N 0 R 0 R
+move:cpy * 1 _ move:cpy  N 1 R 1 R
+move:cpy * _ _ move:rew  N _ L _ L
+move:rew * 0 0 move:rew  N 0 L 0 L
+move:rew * 1 1 move:rew  N 1 L 1 L
+move:rew * _ _ move:end  N _ R _ R
 
-mov1_2:end * * * fwd:crr  N * N * N
+move:end * * * fwd:crr  N * N * N
 
 fwd:crr * * 1	  fwd:chk  N * N 0 R
 fwd:chk * * 1   fwd:rew  N * N 1 L
@@ -40,22 +40,22 @@ read:chk 1 * * 	mem.1:skp  R * N * N
 read:chk # * * 	mem.#:skp  R * N * N
 mem.0:skp 0 * * 	mem.0:skp  R * N * N
 mem.0:skp 1 * * 	mem.0:skp  R * N * N
-mem.0:skp # * * 	mov1_2.0:cpy  R * N * N
+mem.0:skp # * * 	move.0:cpy  R * N * N
 mem.1:skp 0 * * 	mem.1:skp  R * N * N
 mem.1:skp 1 * * 	mem.1:skp  R * N * N
-mem.1:skp # * * 	mov1_2.1:cpy  R * N * N
-mem.#:skp 0 * * 	mov1_2.#:cpy  N * N * N
-mem.#:skp 1 * * 	mov1_2.#:cpy  N * N * N
+mem.1:skp # * * 	move.1:cpy  R * N * N
+mem.#:skp 0 * * 	move.#:cpy  N * N * N
+mem.#:skp 1 * * 	move.#:cpy  N * N * N
 
 
-mov1_2.0:cpy * 0 _	mov1_2.0:cpy  N 0 R 0 R
-mov1_2.0:cpy * 1 _	mov1_2.0:cpy  N 1 R 1 R
-mov1_2.0:cpy * _ _	mov1_2.0:rew  N _ L _ L
-mov1_2.0:rew * 0 0	mov1_2.0:rew  N 0 L 0 L
-mov1_2.0:rew * 1 1	mov1_2.0:rew  N 1 L 1 L
-mov1_2.0:rew * _ _	mov1_2.0:end  N _ R _ R
+move.0:cpy * 0 _	move.0:cpy  N 0 R 0 R
+move.0:cpy * 1 _	move.0:cpy  N 1 R 1 R
+move.0:cpy * _ _	move.0:rew  N _ L _ L
+move.0:rew * 0 0	move.0:rew  N 0 L 0 L
+move.0:rew * 1 1	move.0:rew  N 1 L 1 L
+move.0:rew * _ _	move.0:end  N _ R _ R
 
-mov1_2.0:end * * * 	fwd.0:crr  N * N * N
+move.0:end * * * 	fwd.0:crr  N * N * N
 
 fwd.0:crr * * 1		fwd.0:chk  N * N 0 R
 fwd.0:chk * * 1 	fwd.0:rew  N * N 1 L
@@ -75,14 +75,14 @@ fwd.0:end * * 1 	fwd.0:crr  R * N * N
 cmp.0:chck 0 * * 	cmp.0:succ  N * N * N
 cmp.0:chck 1 * * 	cmp.0:fail  N * N * N
 
-mov1_2.1:cpy * 0 _	mov1_2.1:cpy  N 0 R 0 R
-mov1_2.1:cpy * 1 _	mov1_2.1:cpy  N 1 R 1 R
-mov1_2.1:cpy * _ _	mov1_2.1:rew  N _ L _ L
-mov1_2.1:rew * 0 0	mov1_2.1:rew  N 0 L 0 L
-mov1_2.1:rew * 1 1	mov1_2.1:rew  N 1 L 1 L
-mov1_2.1:rew * _ _	mov1_2.1:end  N _ R _ R
+move.1:cpy * 0 _	move.1:cpy  N 0 R 0 R
+move.1:cpy * 1 _	move.1:cpy  N 1 R 1 R
+move.1:cpy * _ _	move.1:rew  N _ L _ L
+move.1:rew * 0 0	move.1:rew  N 0 L 0 L
+move.1:rew * 1 1	move.1:rew  N 1 L 1 L
+move.1:rew * _ _	move.1:end  N _ R _ R
 
-mov1_2.1:end * * * 	fwd.1:crr  N * N * N
+move.1:end * * * 	fwd.1:crr  N * N * N
 
 fwd.1:crr * * 1		fwd.1:chk  N * N 0 R
 fwd.1:chk * * 1 	fwd.1:rew  N * N 1 L
@@ -102,14 +102,14 @@ fwd.1:end * * 1 	fwd.1:crr  R * N * N
 cmp.1:chck 0 * * 	cmp.1:fail  N * N * N
 cmp.1:chck 1 * * 	cmp.1:succ  N * N * N
 
-mov1_2.#:cpy * 0 _	mov1_2.#:cpy  N 0 R 0 R
-mov1_2.#:cpy * 1 _	mov1_2.#:cpy  N 1 R 1 R
-mov1_2.#:cpy * _ _	mov1_2.#:rew  N _ L _ L
-mov1_2.#:rew * 0 0	mov1_2.#:rew  N 0 L 0 L
-mov1_2.#:rew * 1 1	mov1_2.#:rew  N 1 L 1 L
-mov1_2.#:rew * _ _	mov1_2.#:end  N _ R _ R
+move.#:cpy * 0 _	move.#:cpy  N 0 R 0 R
+move.#:cpy * 1 _	move.#:cpy  N 1 R 1 R
+move.#:cpy * _ _	move.#:rew  N _ L _ L
+move.#:rew * 0 0	move.#:rew  N 0 L 0 L
+move.#:rew * 1 1	move.#:rew  N 1 L 1 L
+move.#:rew * _ _	move.#:end  N _ R _ R
 
-mov1_2.#:end * * * 	fwd.#:crr  N * N * N
+move.#:end * * * 	fwd.#:crr  N * N * N
 
 fwd.#:crr * * 1		fwd.#:chk  N * N 0 R
 fwd.#:chk * * 1 	fwd.#:rew  N * N 1 L
@@ -133,4 +133,4 @@ cmp.1:succ * * * 	rept:rew  L * N * N
 rept:rew 0 * * 		rept:rew  L * N * N
 rept:rew 1 * * 		rept:rew  L * N * N
 rept:rew # * * 		rept:rew  L * N * N
-rept:rew _ * * 		incr1:crr  R * N * N
+rept:rew _ * * 		incr:crr  R * N * N
