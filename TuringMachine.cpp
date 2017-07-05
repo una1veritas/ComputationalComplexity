@@ -19,7 +19,7 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 
 	// inspecting the number of tapes
 	std::string dummy;
-	unsigned int c = 0;
+	unsigned int cnt = 0;
 	std::set<std::string> states;
 
 	// inspect a line to determin the number of tapes.
@@ -28,21 +28,19 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 		getline(file, buff, '\n');
 		strin.str(buff);
 		strin.clear();
-		strin >> dummy;
-		if (dummy[0] == '#') {
-			continue;
-		} else {
-			for (c = 1; !strin.eof(); c++) {
-				strin >> dummy;
-			}
-			break;
+		for (cnt = 0; !strin.eof(); cnt++) {
+			strin >> dummy;
+			if ( dummy[0] == '#' )
+				break;
 		}
+		if ( cnt != 0 )
+			break;
 	}
-	std::cerr << "columns " << c << std::endl;
+	std::cerr << "columns " << cnt << std::endl;
 	if ( inputIsReadOnly ) {
-		noOfTapes = (c - 4) / 3 + 1;
+		noOfTapes = (cnt - 4) / 3 + 1;
 	} else {
-		noOfTapes = (c - 2) / 3;
+		noOfTapes = (cnt - 2) / 3;
 	}
 	std::cerr << noOfTapes << " tapes." << std::endl;
 
@@ -65,9 +63,9 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 		table.push_back(Tuple(noOfTapes));
 		// the 1st element
 		strin >> table.back().current;
-		for (c = 0; c < noOfTapes; c++) {
+		for (cnt = 0; cnt < noOfTapes; cnt++) {
 			// the readout of (c+1)th tape
-			strin >> table.back().read[c];
+			strin >> table.back().read[cnt];
 		}
 		// the next state
 		std::string elem;
@@ -79,13 +77,13 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 		} else {
 			table.back().next = elem;
 		}
-		for (c = 0; c < noOfTapes; c++) {
-			if ( c == 0 && inputIsReadOnly ) {
-				table.back().write[c] = table.back().read[c];
+		for (cnt = 0; cnt < noOfTapes; cnt++) {
+			if ( cnt == 0 && inputIsReadOnly ) {
+				table.back().write[cnt] = table.back().read[cnt];
 			} else {
-				strin >> table.back().write[c];
+				strin >> table.back().write[cnt];
 			}
-			strin >> table.back().headding[c];
+			strin >> table.back().headding[cnt];
 		}
 		if (file.eof())
 			break;
@@ -95,19 +93,20 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 			std::cerr << "Error!!" << std::endl << std::flush;
 #endif
 		//
-		for (c = 0; c < noOfTapes; c++) {
-			if (!(isgraph(table.back().read[c])
-					&& isgraph(table.back().write[c]))) {
+		for (cnt = 0; cnt < noOfTapes; cnt++) {
+			if (!(isgraph(table.back().read[cnt])
+					&& isgraph(table.back().write[cnt]))) {
 				std::cout << "table-" << table.size() << ":Improper format." << std::endl;
 				skipremaining = true;
 				break; //exit(1);
 			}
-			if (!(table.back().headding[c] == 'R'
-					|| table.back().headding[c] == 'L'
-					|| table.back().headding[c] == 'N')) {
+			if (!(table.back().headding[cnt] == 'R'
+					|| table.back().headding[cnt] == 'L'
+					|| table.back().headding[cnt] == 'N')) {
 				std::cout << "table-" << table.size()
-						<< ":Improper head motion specification." << std::endl;
-				exit(1);
+						<< ":Improper head motion specification: " << table.back().headding[cnt] << std::endl;
+				skipremaining = true;
+				break; //exit(1);
 			}
 		}
 		//
