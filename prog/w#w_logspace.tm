@@ -1,11 +1,11 @@
 prog:start _ _ _  !prog:end  N * N * N
-prog:start 0 _ _  inc_1:crr  N * N * N
-prog:start 1 _ _  inc_1:crr  N * N * N
+prog:start 0 _ _  inc_1:carry  N * N * N
+prog:start 1 _ _  inc_1:carry  N * N * N
 
 
-inc_1:crr * 1 *	inc_1:crr  N 0 R * N
-inc_1:crr * _ *	inc_1:rew  N 1 L * N
-inc_1:crr * 0 *	inc_1:rew  N 1 L * N
+inc_1:carry * 1 *	inc_1:carry  N 0 R * N
+inc_1:carry * _ *	inc_1:rew  N 1 L * N
+inc_1:carry * 0 *	inc_1:rew  N 1 L * N
 inc_1:rew * 0 *	inc_1:rew  N 0 L * N
 inc_1:rew * _ *	inc_1:end  N _ R * N
 

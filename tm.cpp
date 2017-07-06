@@ -94,6 +94,8 @@ int main(int argc, char * argv[]) {
 		} else if ( c == 'c' ) {
 			//Sleep(750);
 			usleep(250000);
+		} else if ( c == 's' ) {
+			usleep(25000);
 		}
 	} while ( tm.step() );
 	std::cout << std::endl << "The Machine has stopped at the state '" << tm.stateName() << "' and " << std::endl;
