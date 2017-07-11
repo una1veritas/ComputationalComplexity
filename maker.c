@@ -9,7 +9,7 @@
 #include <stdlib.h>
 
 int main(int argc, char * argv[]) {
-	unsigned int a, i, h;
+	unsigned int a, i;
 
 	/* Read only mem (input), A*/
 

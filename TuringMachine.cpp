@@ -30,7 +30,7 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 		strin.clear();
 		for (cnt = 0; !strin.eof(); cnt++) {
 			strin >> dummy;
-			if ( dummy[0] == '#' )
+			if ( dummy.compare(0,2,"//") == 0 )
 				break;
 		}
 		if ( cnt != 0 )
@@ -57,7 +57,7 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 
 		if (std::string(buff).empty())
 			continue;
-		if (buff[0] == '#')
+		if ( buff.compare(0,2, "//") == 0 )
 			continue;
 
 		table.push_back(Tuple(noOfTapes));
