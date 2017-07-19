@@ -1,6 +1,7 @@
 #.project
 #.cproject
 .metadata
+.settings
 
 *.exe
 *.o
