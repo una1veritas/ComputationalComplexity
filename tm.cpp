@@ -35,7 +35,7 @@ struct CommandParams {
 	char blankSymbol;
 
 	CommandParams(void) :
-		programFileName(""), inputTape(""), inputIsReadOnly(true), blankSymbol(SPECIAL_BLANK) {}
+		programFileName(""), inputTape(""), inputIsReadOnly(true), blankSymbol(Tape::SPECIAL_BLANK) {}
 
 	friend ostream & operator<<(ostream & stream, const CommandParams & obj) {
 		stream << obj.programFileName << ", " << obj.inputTape << ", " << (obj.inputIsReadOnly ? "true" : "false")
@@ -99,7 +99,7 @@ int main(int argc, char * argv[]) {
 		}
 	} while ( tm.step() );
 	std::cout << std::endl << "The Machine has stopped at the state '" << tm.stateName() << "' and " << std::endl;
-	if ( tm.isAccepted() ) {
+	if ( tm.accepted() ) {
 		std::cout << "accepted ";
 	} else {
 		std::cout << "rejected ";

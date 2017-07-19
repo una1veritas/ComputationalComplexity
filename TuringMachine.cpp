@@ -11,6 +11,25 @@
 
 #include "TuringMachine.h"
 
+char Tape::SPECIAL_BLANK = '_';
+char Tape::SPECIAL_DONTCARE = '*';
+char Tape::SPECIAL_THESAME = '*';
+
+const bool Tuple::matchesLeft(const std::string & state, const std::string & reads, const char doncare) const {
+	if ( this->read.size() != reads.size() )
+		return false;
+	if ( current != state)
+		return false;
+	for (unsigned int tno = 0; tno < this->read.size(); tno++) {
+		if ( this->read[tno] == doncare ) {
+			continue;
+		}
+		if ( this->read[tno] != reads[tno] ) {
+			return false;
+		}
+	}
+	return true;
+}
 //
 void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 
@@ -136,6 +155,144 @@ void TuringMachine::initialize(const std::string inputTape, const char blank) {
 	std::srand(std::time(0)); // seed for nondeterministic transitions
 }
 
+//
+bool TuringMachine::step(const unsigned int n) {
+	std::string acc;
+	std::map<std::string, int>::iterator sitr;
+	std::map<char, int>::iterator hitr;
+	std::vector<Tuple *> possibleTuples;
+
+	//std::cerr << "table search ... ";
+	std::string readout(noOfTapes, Tape::SPECIAL_BLANK);
+	possibleTuples.clear();
+	for (unsigned int index = 0; index < table.size(); index++) {
+		for(unsigned int tapeno = 0; tapeno < noOfTapes; tapeno++) {
+			readout[tapeno] = tapes[tapeno].head();
+		}
+		if ( table[index].matchesLeft(state, readout) ) {
+			possibleTuples.push_back( &table[index]);
+		}
+	}
+	// extracted tuples for possible transitions
+	if ( possibleTuples.empty() )
+		return false;  // halt
+	unsigned int selected = 0;
+	if ( possibleTuples.size() > 1 ) {
+		selected = rand() % possibleTuples.size();
+	}
+	Tuple & ctuple = *possibleTuples[selected];
+	// head actions for tapes
+	for (unsigned int k = 0; k < noOfTapes; k++) {
+		if (ctuple.write[k] == Tape::SPECIAL_DONTCARE) {
+			tapes[k].head() = readout[k];
+			//*head[k] = *head[k];
+			// implements this by don't touch
+		} else {
+			tapes[k].head() = ctuple.write[k] ;
+		}
+		switch (ctuple.headding[k]) {
+		case HEADMOTION_RIGHT:
+			tapes[k].move(+1);
+			break;
+		case HEADMOTION_LEFT:
+			tapes[k].move(-1);
+			break;
+		default: // HEADMOTION_NOMOVE 'N' or 'n'
+//		tapes[k].move(0);
+			break;
+		}
+	}
+	state = ctuple.next;
+
+	return true;
+}
+
+
+const bool TuringMachine::accepted(void) const {
+	return 	tapes[0].headAtTheEnd() &&  (acceptingStates.find(state) != acceptingStates.end());
+}
+
+//
+void TuringMachine::print(void) const { //string state){
+
+	//
+	if ( acceptingStates.find(state) != acceptingStates.end() )
+		std::cout << "Accepting ";
+	std::cout << std::endl;
+	std::cout << "State: " << state << std::endl;
+
+	//
+	std::cout << "Input tape: " << std::endl;
+	std::cout << tapes[0] << std::endl;
+
+	//
+	std::cout << "Working tape:";
+	for (unsigned int tn = 1; tn < noOfTapes; tn++) {
+		std::cout << std::endl << tapes[tn];
+	}
+	std::cout << std::endl;
+
+}
+
+// 計算状況（時点表示）のみの表示
+std::ostream & TuringMachine::showConfiguration(std::ostream & stream) {
+
+	// 状態
+	stream << "( ";
+	stream << state;
+	if ( acceptingStates.find(state) != acceptingStates.end() )
+		stream << "!";
+	stream << ", " ;
+
+	// 入力テープ
+	stream << tapes[0] << ", ";
+
+	// 作業用テープ
+	for (unsigned int tn = 1; tn < noOfTapes; tn++) {
+		stream << std::endl << "\t";
+		stream<< tapes[tn];
+		if ( tn + 1 == noOfTapes )
+			continue;
+		stream << ", ";
+	}
+	stream << " )" << std::endl;
+	return stream;
+}
+
+/*
+bool TuringMachine::searchin(std::string s, char in, char wk) {
+
+	for (unsigned int i = 0; i < table.size(); i++)
+		if (table[i].current == s && table[i].read[0] == in
+				&& table[i].read[1] == wk)
+			return true;
+	return false;
+}
+*/
+
+void TuringMachine::show(std::ostream & stream) {
+	stream << "---Transition table---" << std::endl;
+	for (unsigned int i = 0; i < table.size(); i++) {
+		stream << table[i].current << ' ';
+		for(unsigned int tno = 0; tno < noOfTapes; tno++)
+			stream << table[i].read[tno] << ' ';
+		stream << " -> " << table[i].next;
+		for(unsigned int tno = 0; tno < noOfTapes; tno++) {
+			stream << " (" << table[i].write[tno] << ", " << table[i].headding[tno]
+				<< "), ";
+		}
+		stream << std::endl;
+	}
+	stream << "---Table end---" << std::endl;
+	stream << "Accepting states: ";
+	for (std::set<std::string>::iterator ep = acceptingStates.begin();
+			ep != acceptingStates.end(); ep++) {
+		stream << *ep << ", ";
+	}
+	stream << std::endl;
+}
+
+
 #ifdef SIMULATE
 // tape繧定ｪｭ縺ｿ迥ｶ諷矩�ｷ遘ｻ繧貞ｮ溯｡後☆繧矩未謨ｰ
 void TuringMachine::simulate(void) {
@@ -236,158 +393,3 @@ void TuringMachine::simulate(void) {
 		exit(0);
 }
 #endif
-
-//
-bool TuringMachine::step(const unsigned int n) {
-	std::string acc;
-	std::map<std::string, int>::iterator sitr;
-	std::map<char, int>::iterator hitr;
-	int headd;
-	unsigned int index, soffset;
-	Tuple * currentTuple = NULL;
-
-	//std::cerr << "table search ... ";
-	std::string expect, read;
-	soffset = std::rand() % table.size();
-	for (index = 0; index < table.size(); index++) {
-		currentTuple = &table[(soffset + index) % table.size()];
-		//std::cerr << (soffset + index) % table.size() << ", ";
-		if (currentTuple->current != state)
-			continue;
-		//cerr << currentTuple << endl;
-		expect.clear() ;
-		read.clear();
-		unsigned int tn;
-		for (tn = 0; tn < noOfTapes; tn++) {
-			if ( currentTuple->read[tn] == SPECIAL_DONTCARE ) {
-				expect += tapes[tn].head();
-			} else {
-				expect += currentTuple->read[tn];
-			}
-			read += tapes[tn].head();
-		}
-		if ( read == expect ) {
-			// std::cout << "expect: " << expect << " - read: " << read << std::endl;
-			break;
-		}
-	}
-	//std::cerr << std::endl;
-	// std::cout << "index = " << index << " size = " << table.size() << std::endl;
-	if ( index == table.size() )
-		return false;  // halt
-	// preserve the row-in-table number of the tuple
-	//index = (soffset + index) % table.size();
-
-	//
-	for (unsigned int k = 0; k < noOfTapes; k++) {
-		if (currentTuple->write[k] == SPECIAL_THESAME) {
-			tapes[k].head() = read[k];
-			//*head[k] = *head[k];
-			// implements this by don't touch
-		} else {
-			tapes[k].head() = currentTuple->write[k] ;
-		}
-		switch (currentTuple->headding[k]) {
-		case 'R':
-		case 'r':
-			headd = +1;
-			break;
-		case 'L':
-		case 'l':
-			headd = -1;
-			break;
-		default: // 'N' or 'n'
-			headd = 0;
-			break;
-		}
-		tapes[k].move(headd);
-		state = currentTuple->next;
-	}
-
-	return true;
-}
-
-
-const bool TuringMachine::isAccepted(void) {
-	return 	tapes[0].headAtTheEnd() &&  (acceptingStates.find(state) != acceptingStates.end());
-}
-
-//
-void TuringMachine::print(void) { //string state){
-
-	//
-	if ( acceptingStates.find(state) != acceptingStates.end() )
-		std::cout << "Accepting ";
-	std::cout << std::endl;
-	std::cout << "State: " << state << std::endl;
-
-	//
-	std::cout << "Input tape: " << std::endl;
-	std::cout << tapes[0] << std::endl;
-
-	//
-	std::cout << "Working tape:";
-	for (unsigned int tn = 1; tn < noOfTapes; tn++) {
-		std::cout << std::endl << tapes[tn];
-	}
-	std::cout << std::endl;
-
-}
-
-// 計算状況（時点表示）のみの表示
-std::ostream & TuringMachine::showConfiguration(std::ostream & stream) {
-
-	// 状態
-	stream << "( ";
-	stream << state;
-	if ( acceptingStates.find(state) != acceptingStates.end() )
-		stream << "!";
-	stream << ", " ;
-
-	// 入力テープ
-	stream << tapes[0] << ", ";
-
-	// 作業用テープ
-	for (unsigned int tn = 1; tn < noOfTapes; tn++) {
-		stream << std::endl << "\t";
-		stream<< tapes[tn];
-		if ( tn + 1 == noOfTapes )
-			continue;
-		stream << ", ";
-	}
-	stream << " )" << std::endl;
-	return stream;
-}
-
-/*
-bool TuringMachine::searchin(std::string s, char in, char wk) {
-
-	for (unsigned int i = 0; i < table.size(); i++)
-		if (table[i].current == s && table[i].read[0] == in
-				&& table[i].read[1] == wk)
-			return true;
-	return false;
-}
-*/
-
-void TuringMachine::show(std::ostream & stream) {
-	stream << "---Transition table---" << std::endl;
-	for (unsigned int i = 0; i < table.size(); i++) {
-		stream << table[i].current << ' ';
-		for(unsigned int tno = 0; tno < noOfTapes; tno++)
-			stream << table[i].read[tno] << ' ';
-		stream << " -> " << table[i].next;
-		for(unsigned int tno = 0; tno < noOfTapes; tno++) {
-			stream << " (" << table[i].write[tno] << ", " << table[i].headding[tno]
-				<< "), ";
-		}
-		stream << std::endl;
-	}
-	stream << "---Table end---" << std::endl;
-	stream << "Accepting states: ";
-	for (std::set<std::string>::iterator ep = acceptingStates.begin();
-			ep != acceptingStates.end(); ep++) {
-		stream << *ep << ", ";
-	}
-	stream << std::endl;
-}

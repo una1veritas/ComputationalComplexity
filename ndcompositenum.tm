@@ -1,15 +1,20 @@
-cp 0 _ _ cp R 0 R _ N
-cp 1 _ _ cp R 1 R _ N
-cp # _ _ rew N _ L _ N
-rew # 0 _ rew N 0 L _ N
-rew # 1 _ rew N 1 L _ N
-rew # _ _ ndmul N _ R _ N
+guess 	0 _ _ guess 	R 0 R _ N
+guess 	0 _ _ guess 	R 1 R _ N
+guess 	0 _ _ rewnd 	R _ L _ N
+guess 	1 _ _ guess 	R 0 R _ N
+guess 	1 _ _ guess 	R 1 R _ N
+guess 	1 _ _ rewnd.w 	R 1 L _ N
+guess 	_ _ _ rewnd.w 	L _ L _ N
 
-ndmul # * _ add N * N _ N
-ndmul # * 0 add N * N 0 N
-ndmul # * 1 add N * N 1 N
-ndmul # * 0 cmp N * N * N
-ndmul # * 1 cmp N * N * N
+rewnd.w	0 0 _ rewnd.w 	L _ L _ N
+rewnd.w	0 1 _ rewnd.w 	L 1 L _ N
+rewnd.w	1 0 _ rewnd.w 	L 0 L _ N
+rewnd.w	1 1 _ rewnd.w 	L 1 L _ N
+rewnd.w	0 _ _ rewnd.i 	L _ N _ N
+rewnd.w	1 _ _ rewnd.i 	L _ N _ N
+rewnd.i 0 _ _ rewnd.i 	L _ N _ N
+rewnd.i 1 _ _ rewnd.i 	L _ N _ N
+rewnd.i _ _ _ cmp 		R _ R _ R
 
 
 add		* 0 0 add 	N 0 R 	0 R
