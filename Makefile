@@ -8,7 +8,10 @@ INCLUDES = -I./
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $<
 
-all: tm.exe maker.exe
+all: tm.exe nc++test.exe
+
+nc++test.exe: nc++test.o
+	$(CXX) $(CFLAGS) $(INCLUDES)  nc++test.o -o $@
 
 maker.exe: maker.o
 	$(CC) $(CFLAGS) $(INCLUDES)  maker.o -o $@
@@ -21,4 +24,4 @@ tm.o: TuringMachine.h
 TuringMachine.o: TuringMachine.h
 
 clean:
-	rm -f tm.exe tm.o TuringMachine.o
+	rm -f *.exe *.o
