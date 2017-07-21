@@ -5,13 +5,17 @@ CFLAGS = -Wall -O0 -g3
 CXXFLAGS = -Wall -O0 -g3
 INCLUDES = -I./ 
 
+
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $<
 
 all: tm.exe nc++test.exe
 
-nc++test.exe: nc++test.o
-	$(CXX) $(CFLAGS) $(INCLUDES)  nc++test.o -o $@
+nc++test.exe: ./cprog/nc++test.o
+	$(CXX) $(CFLAGS) $(INCLUDES) nc++test.o -o $@
+
+nc++test.o:
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $<
 
 maker.exe: maker.o
 	$(CC) $(CFLAGS) $(INCLUDES)  maker.o -o $@
