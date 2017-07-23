@@ -1,63 +1,40 @@
 #include <iostream>
 #include <cctype>
-#include <string>
-#include <sstream>
+#include <cstring>
 
-/* NC++ definitions */
-#include <random>
-std::random_device _randev; 
-// may be slow, but no seed is required.
-#define ndif if ( _randev() & 1 )
-#define ndswitch(x) switch(_randev() % (x))
-/* NC++ definitions end */
+#include "nc++.h"
+#include "boolarray.h"
 
 #define ABS(x) ((x)>=0 ? (x) : -(x))
 #define SIGN(x) ((x) < 0 ? -1: 1)
 
-class boolassignment {
-	bool * array;
-	unsigned int length;
+//"1, 2, 3;1, -2, 3;1, 2, 3;-1, 2, 3;-1, -2, -3;-3, 5;-4, 5;3,-4,-5"
+bool evalcnfformula(const char * formula, const boolarray & x);
 
-public:
-	boolassignment(unsigned int n) {
-		length = n;
-		array = new bool[length];
-	}
+int main(const int argc, const char * argv[]) {
+	if ( argc < 2 )
+		return -1;
 
-	~boolassignment() {
-		//delete [] array;
-	}
+	const int n = 5;
+	boolarray x(n);
 
-	unsigned int size() const { return length; }
+  for(int i = 0; i < n; i++) {
+    ndif
+      x[i] = true;
+    else
+      x[i] = false;
+  }
 
-	void set(const unsigned int pos) {
-		array[pos] = true;
-	}
+  std::cout << "Boolean assignment: "<< x << std::endl;
+  if ( evalcnfformula(argv[1], x) )
+	  std::cout << "yes." << std::endl;
+  else
+	  std::cout << "(halt.)" << std::endl;
 
-	void reset(const unsigned int pos) {
-		array[pos] = false;
-	}
+  return 0;
+}
 
-	bool test(const unsigned int pos) const {
-		return array[pos];
-	}
-
-	const bool & operator[](const unsigned int i) const {
-		return array[i];
-	}
-
-	bool & operator[](const unsigned int i) {
-		return array[i];
-	}
-
-	friend std::ostream & operator<<(std::ostream & ostr, const boolassignment & b) {
-		for(unsigned int i = 0; i < b.size(); i++)
-			ostr << b[i];
-		return ostr;
-	}
-};
-
-bool evalformula(char const * formula, boolassignment x) {
+bool evalcnfformula(const char * formula, const boolarray & x) {
 	char fm[strlen(formula)];
 	char * bgptr, * edptr = fm;
 	long varid;
@@ -66,17 +43,17 @@ bool evalformula(char const * formula, boolassignment x) {
 		OR, AND
 	} opr = OR;
 	strcpy(fm, formula);
-	std::cout << "evalformula.." << std::endl;
+
 	claval = false;
 	fmlval = true;
 	while(1) {
 		for( bgptr = edptr; isspace(*bgptr); ++bgptr) ;
 		if ( *bgptr == ',' ) {
-			std::cout << " OR ";
+			std::cout << " v ";
 			opr = OR;
 			++bgptr;
 		} else if ( *bgptr == ';' ) {
-			std::cout << " AND " << std::endl;
+			std::cout << " ^ " << std::endl;
 			opr = AND;
 			++bgptr;
 		} else {
@@ -85,12 +62,12 @@ bool evalformula(char const * formula, boolassignment x) {
 		}
 		varid = strtol(bgptr, &edptr, 10);
 		if ( SIGN(varid) > 0 ) {
-			litval = x[varid];
-			std::cout << "x" << varid << " = " << litval;
+			litval = x[varid-1];
+			std::cout << "x" << varid << "=" << litval;
 		} else {
 			varid = ABS(varid);
-			litval = !x[varid];
-			std::cout << "~x" << varid << " = " << litval;
+			litval = !x[varid-1];
+			std::cout << "~x" << varid << "=" << litval;
 		}
 		if ( opr == OR ) {
 			claval = claval || litval;
@@ -102,32 +79,5 @@ bool evalformula(char const * formula, boolassignment x) {
 			break;
 	}
 	std::cout << std::endl;
-	std::cout << "fmlval = " << fmlval << std::endl;
 	return fmlval;
-}
-
-int main(const int argc, const char * argv[]) {
-	if ( argc < 2 )
-		return -1;
-
-	std::cout << argv[1] << std::endl;
-
-	const int n = 9;
-	boolassignment x(n);
-  
-  for(int i = 0; i < n; i++) {
-    ndif {
-      x[i] = true;
-    } else {
-      x[i] = false;
-    }
-  }
-  std::cout << "Boolean assignment: "<< x << std::endl;
-  
-  if ( evalformula(argv[1], x) )
-	  std::cout << "yes." << std::endl;
-  else
-	  std::cout << "halt." << std::endl;
-  
-  return 0;
 }
