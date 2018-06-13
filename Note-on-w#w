@@ -1,0 +1,27 @@
+---Transition table---
+copy a _ 	copy (a, R),  (a, R), 
+copy b _  	copy (b, R),  (b, R), 
+copy # _  	rew  (#, N),  (_, L), 
+rew  # a  	rew  (#, N),  (a, L), 
+rew  # b  	rew  (#, N),  (b, L), 
+rew  # _  	comp (#, R),  (_, R), 
+comp a a 	comp (a, R),  (a, R), 
+comp b b  	comp (b, R),  (b, R), 
+comp _ _ 	ok   (_, N),  (_, N), 
+---Table end---
+Accepting states: ok, 
+
+( copy, [a]b b # a b b , [_] )
+( copy,  a[b]b # a b b , a[_] )
+( copy,  a b[b]# a b b , a b[_] )
+( copy,  a b b[#]a b b , a b b[_] )
+( rew ,  a b b[#]a b b , a b[b]_  )
+( rew ,  a b b[#]a b b , a[b]b _  )
+( rew ,  a b b[#]a b b , [a]b b _  )
+( rew ,  a b b[#]a b b , [_]a b b _  )
+( comp,  a b b #[a]b b , _[a]b b _  )
+( comp,  a b b # a[b]b , _ a[b]b _  )
+( comp,  a b b # a b[b], _ a b[b]_  )
+( comp,  a b b # a b b[_], _ a b b[_] )
+( ok! ,  a b b # a b b[_], _ a b b[_] )
+

@@ -1,9 +1,9 @@
-copy  0 _	copy  R 0 R
-copy  1 _	copy  R 1 R
+copy  a _	copy  R a R
+copy  b _	copy  R b R
 copy  # _	rew N _ L
-rew   # 0 	rew N 0 L
-rew   # 1 	rew N 1 L
-rew   # _ 	chk R _ R
-chk   0 0 	chk R 0 R
-chk   1 1 	chk R 1 R
-chk   _ _ 	!OK N _ N
+rew   # a 	rew N a L
+rew   # b 	rew N b L
+rew   # _ 	comp R _ R
+comp   a a 	comp R a R
+comp   b b 	comp R b R
+comp   _ _ 	!ok N _ N
