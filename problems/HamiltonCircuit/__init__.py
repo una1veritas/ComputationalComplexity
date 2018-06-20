@@ -1,5 +1,5 @@
 
-path = 'graph.txt'
+path = 'datastructures.txt'
 
 try:
     # ファイルオブジェクトを変数fに代入。close()は書かなくてＯＫ。
