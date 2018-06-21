@@ -1,6 +1,7 @@
 '''
 
-Decision Problem instance class library
+Decision problem instance 
+class library
 
 Created on 2018/06/20
 
