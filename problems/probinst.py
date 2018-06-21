@@ -1,4 +1,7 @@
 '''
+
+Decision Problem instance class library
+
 Created on 2018/06/20
 
 @author: sin
