@@ -1,20 +1,6 @@
 import sys
 import random
-
-class Graph():
-    def __init__(self,v,e):
-        self.vertices = set(v)
-        self.edges = set()
-        for u, v in e:
-            if u != v : #rejects self loop
-                edge = (u,v) if u < v else (v,u)
-                self.edges.add(edge)
-
-    def adjacent(self, u, v):
-        if u < v :
-            return (u,v) in self.edges
-        else:
-            return (v,u) in self.edges 
+from probinst import Graph
 
 #引数にはコンマで区切った（tuple として解釈される）頂点の列，辺の列，
 #あるいは set, tuple, list 形式での頂点の集合，辺の集合 

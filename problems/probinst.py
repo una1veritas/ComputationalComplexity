@@ -3,8 +3,9 @@ Created on 2018/06/20
 
 @author: sin
 '''
+import ast
         
-class graph():
+class Graph():
     '''
     datastructures data structure
     '''
@@ -28,3 +29,16 @@ class graph():
             if u in vsub and v in vsub:
                 iedges.add( (u,v) )
         return iedges
+
+class BooleanFormula():
+    def __init__(self,f):
+        self.formula = f
+        boolvars = set()
+        for node in ast.walk(ast.parse(f)):
+            if isinstance(node, ast.Name) :
+                boolvars.add(node.id)
+        self.variables = tuple(sorted(list(boolvars)))
+
+    def evaluate(self, assign):
+        return eval(self.formula, assign)
+

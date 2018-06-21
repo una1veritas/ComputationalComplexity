@@ -1,11 +1,10 @@
 import sys
-sys.path.append('/Users/sin/Documents/Projects/ComputationalComplexity/problems')
 import random
-import datastructures
+from probinst import Graph
 
 #引数にはコンマで区切った（tuple として解釈される）頂点の列，辺の列，
 #あるいは set, tuple, list 形式での頂点の集合，辺の集合 
-g = graph(eval(sys.argv[1]), eval(sys.argv[2]))
+g = Graph(eval(sys.argv[1]), eval(sys.argv[2]))
 k = int(eval(sys.argv[3]))
 print('G = (V = '+str(g.vertices)+', E = '+str(g.edges)+ ' )')
 print('colors = '+str(k))
