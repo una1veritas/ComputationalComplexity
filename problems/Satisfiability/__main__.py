@@ -1,6 +1,6 @@
 import sys
 import random
-from probinst import BooleanFormula
+from probinstance import BooleanFormula
 
 #引数には python の論理式として書かれた論理関数
 f = BooleanFormula(sys.argv[1])

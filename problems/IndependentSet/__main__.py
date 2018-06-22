@@ -13,19 +13,20 @@ else:
     k = eval(sys.argv[2])
 g = Graph(v, e)
 print('G = (V = '+str(g.vertices)+', E = '+str(g.edges)+ ' )')
-print('threshold for colors = '+str(k))
+print('independent set no less than = '+str(k))
 
-#非決定的な彩色の生成をランダムでシミュレーション
-coloring = dict()
+#非決定的な独立点集合の選択をランダムでシミュレーション
+vsub = set()
 for v in g.vertices:
-    coloring[v] = random.randint(0,k)
-print('coloring = '+str(coloring))
+    if random.randint(0,1) == 1 :
+        vsub.add(v)
+print('subset = '+str(vsub))
 
 print('verifying...')
-for edge in g.edges :
-    if coloring[edge[0]] == coloring[edge[1]] :
-        print('failed. '+str(edge))
-        break
-else:
+induced = g.inducedEdges(vsub)
+if len(vsub) >= k and len(induced) == 0 :
     print('success!')
-#prints out success on accept
+elif len(vsub) < k:
+    print('failed, subset is no more than '+str(k - 1))
+else:
+    print('failed, adjacent in '+str(induced))

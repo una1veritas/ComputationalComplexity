@@ -38,6 +38,7 @@ class BooleanFormula():
     def __init__(self,f):
         self.formula = f
         boolvars = set()
+        '''python のパーサを使って式から変数だけ取り出す'''
         for node in ast.walk(ast.parse(f)):
             if isinstance(node, ast.Name) :
                 boolvars.add(node.id)

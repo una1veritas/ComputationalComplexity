@@ -1,10 +1,9 @@
 import sys
 import random
-from probinst import Graph
+from probinstance import Graph
 
-#引数にはコンマで区切った（tuple として解釈される）頂点の列，辺の列，
-#あるいは set, tuple, list 形式での頂点の集合，辺の集合 
-g = Graph(eval(sys.argv[1]), eval(sys.argv[2]))
+#引数は頂点のコレクション，辺のコレクション（あるいはその組）
+g = Graph(eval(sys.argv[1])[0], eval(sys.argv[1])[1])
 print('G = (V = '+str(g.vertices)+', E = '+str(g.edges)+ ' )')
 circuit = list(g.vertices)
 
