@@ -1,8 +1,8 @@
 CC = gcc
 CXX = g++ -std=c++11
 
-CFLAGS = -Wall -O0 -g3
-CXXFLAGS = -Wall -O0 -g3
+CFLAGS = -Wall -O -g3
+CXXFLAGS = -Wall -O -g3
 INCLUDES = -I./ 
 
 
