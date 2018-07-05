@@ -11,7 +11,7 @@ import ast
         
 class Graph():
     '''
-    datastructures data structure
+    mathematical data structure representing a relation
     '''
     def __init__(self,v,e):
         self.vertices = set(v)
@@ -47,3 +47,70 @@ class BooleanFormula():
     def evaluate(self, assign):
         return eval(self.formula, assign)
 
+class CNFFormula():
+    def __init__(self,fstr):
+        self.clauses = []
+        self.variables = set()
+        lastlbracepos = -1
+        for pos in range(0,len(fstr)):
+            if lastlbracepos == -1 and fstr[pos] == '(':
+                lastlbracepos = pos
+            elif lastlbracepos != -1 and fstr[pos] == '(':
+                '''(('''
+                lastlbracepos = pos
+            elif lastlbracepos != -1 and fstr[pos] == ')':
+                t_clause = fstr[lastlbracepos+1:pos].split(',')
+                f_clause = [ ]
+                for a_literal in t_clause:
+                    a_literal = a_literal.strip(' ')
+                    self.variables.add(a_literal.replace('~',''))
+                    f_clause.append(a_literal)
+                self.clauses.append(f_clause)
+                lastlbracepos = -1
+
+    def evaluate(self, assign):
+        for a_clause in self.clauses:
+            clval = False
+            for a_literal in a_clause:
+                if '~' in a_literal:
+                    litval = not assign[a_literal.strip('~')]
+                else:
+                    litval = assign[a_literal]
+                if litval:
+                    clval = True
+            if not clval:
+                return False            
+        return True
+    
+        return eval(self.formula, assign)
+
+    def __str__(self):
+        t_str = '('
+        t_str= t_str + '{'
+        vc = 0
+        for v in sorted(list(self.variables)) :
+            if vc == 0:
+                vc = 1
+            else:
+                t_str = t_str + ', '
+            t_str = t_str + v
+        t_str = t_str + '}'
+        t_str = t_str + ', ('
+        cc = 0
+        for c in self.clauses :
+            if cc == 0:
+                cc = 1
+            else:
+                t_str = t_str + ', '                
+            t_str = t_str + '('
+            lc = 0
+            for l in c:
+                if lc == 0 :
+                    lc = 1
+                else:
+                    t_str = t_str + ', '
+                t_str = t_str + l
+            t_str = t_str + ')'
+        t_str = t_str + ')'
+        return t_str
+    
