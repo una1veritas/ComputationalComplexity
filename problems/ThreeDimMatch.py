@@ -1,3 +1,8 @@
+'''
+Created on 2018/07/06
+
+@author: Sin Shimozono
+'''
 import sys
 import random
 
