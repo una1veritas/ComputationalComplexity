@@ -11,7 +11,7 @@
 
 #include "TuringMachine.h"
 
-char Tape::SPECIAL_BLANK = '_';
+char Tape::SPECIAL_BLANK = 'B';
 char Tape::SPECIAL_DONTCARE = '*';
 char Tape::SPECIAL_THESAME = '*';
 

@@ -19,7 +19,7 @@ struct Tape {
 	std::string content;
 	char blank;
 
-	static char SPECIAL_BLANK; // = '_';
+	static char SPECIAL_BLANK; // = 'B';
 	static char SPECIAL_DONTCARE; // = '*';
 	static char SPECIAL_THESAME; // = '*';
 
