@@ -76,10 +76,11 @@ int main(int argc, char * argv[]) {
 
 	// シミュレート実行
 	cout << " Go next step         -> '[return]'" << endl
-		<<  " Continue until halt  -> 'c'" << endl
+			<<  " Continue until halt  -> 'c'" << endl
+			<<  " High-speed continue until halt  -> 's'" << endl
 		<<  " Exit                 -> 'e'" << endl << endl;
 
-	tm.initialize(params.inputTape);
+	tm.initialize(params.inputTape, params.blankSymbol);
 	char c = 'n';
 	do {
 		tm.showConfiguration(std::cout);

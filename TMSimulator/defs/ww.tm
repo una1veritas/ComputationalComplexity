@@ -1,6 +1,6 @@
-0 a _	0 R  a R
-0 b _ 	0 R  b R
-0 _ _ 	1 L  _ L
+0 a B	0 R  a R
+0 b B 	0 R  b R
+0 B B 	1 L  B L
 1 a a 	2 N  a L
 1 a b 	2 N  b L
 1 b a 	2 N  a L
@@ -9,9 +9,9 @@
 2 a b 	1 L  b L
 2 b a 	1 L  a L
 2 b b 	1 L  b L
-1 a _ 	3 R  _ R
-1 b _ 	3 R  _ R
+1 a B 	3 R  B R
+1 b B 	3 R  B R
 3 a a 	3 R  a R
 3 b b 	3 R  b R
-3 _ a 	!4 N  a N
-3 _ b 	!4 N  b N
+3 B a 	!4 N  a N
+3 B b 	!4 N  b N

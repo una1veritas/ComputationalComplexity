@@ -1,9 +1,0 @@
-copy  a _	copy  R a R
-copy  b _	copy  R b R
-copy  # _	rew N _ L
-rew   # a 	rew N a L
-rew   # b 	rew N b L
-rew   # _ 	comp R _ R
-comp   a a 	comp R a R
-comp   b b 	comp R b R
-comp   _ _ 	!ok N _ N

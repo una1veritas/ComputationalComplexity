@@ -1,0 +1,9 @@
+copy  a B	copy  R a R
+copy  b B	copy  R b R
+copy  # B	rew N B L
+rew   # a 	rew N a L
+rew   # b 	rew N b L
+rew   # B 	comp R B R
+comp   a a 	comp R a R
+comp   b b 	comp R b R
+comp   B B 	!ok N B N
