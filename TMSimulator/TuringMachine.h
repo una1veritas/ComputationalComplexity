@@ -137,6 +137,7 @@ public:
 //	bool searchin(std::string state, char oninput, char onwork);
 	const std::string & stateName(void) const { return state; }
 	const bool accepted(void) const;
+	const bool inAcceptingState(void) const;
 
 	bool step(const unsigned int n = 1);
 	const Tape & inputTape(void) { return tapes[0]; }

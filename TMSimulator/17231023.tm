@@ -1,0 +1,9 @@
+q0 a B q0 R a R
+q0 b B q0 R B N
+q0 B B q1 L B L
+q1 B B q3 N B N
+q1 a a q1 L a N
+q1 b a q1 L a L
+q1 a B q2 L B N
+q2 a B q2 L B L
+q2 B B !q3 N B N

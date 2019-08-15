@@ -1,0 +1,12 @@
+q1 a B q2 R a N
+q1 b B q3 R b R
+q2 a a q1 N a R
+q2 a B q1 N B R
+q2 a b q2 R B L
+q2 b a q3 R B L
+q3 b a q3 R B L
+q3 b b q1 N b R
+q3 b B q1 N B R
+q3 a b q2 R B L
+q2 B a !q4 N B N
+q3 B b q4 N B N

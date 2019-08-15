@@ -70,6 +70,7 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 	file.clear();
 	file.seekg(0, std::ios::beg);
 	bool skipremaining = false;
+	std::string elem;
 	while (!file.eof()) {
 		if ( skipremaining ) break;
 		getline(file, buff, '\n');
@@ -81,16 +82,27 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 		if ( buff.compare(0,2, "//") == 0 )
 			continue;
 
-		table.push_back(Tuple(noOfTapes));
+		// the left part
 		// the 1st element
-		strin >> table.back().current;
+		strin >> elem;
+		if ( elem[0] == '!') {
+			// with the final state marking
+			elem = elem.substr(1, elem.length() - 1);
+			acceptingStates.insert(elem);
+		}
+		if ( strin.eof() ) {
+			// only definition of an accepting state
+			std::cout << "accepting state: " << table.back().current << std::endl;
+			continue;
+		}
+		table.push_back(Tuple(noOfTapes));
+		table.back().current = elem;
 		for (cnt = 0; cnt < noOfTapes; cnt++) {
 			// the readout of (c+1)th tape
 			strin >> table.back().read[cnt];
 		}
-		std::cerr << "table row: " << table.back() << std::endl;
+		// std::cout << "table row: " << table.back() << std::endl;
 		// the next state
-		std::string elem;
 		strin >> elem;
 		if ( elem[0] == '!') {
 			// with the final state marking
@@ -107,7 +119,7 @@ void TuringMachine::program(std::istream & file, const bool inputIsReadOnly) {
 			}
 			strin >> table.back().headding[cnt];
 		}
-		std::cerr << "table row: " << table.back() << std::endl;
+		//std::cout << "table row: " << table.back() << std::endl;
 
 		if (file.eof())
 			break;
@@ -208,6 +220,10 @@ bool TuringMachine::step(const unsigned int n) {
 }
 
 
+const bool TuringMachine::inAcceptingState(void) const {
+	return 	(acceptingStates.find(state) != acceptingStates.end());
+}
+
 const bool TuringMachine::accepted(void) const {
 	return 	tapes[0].headAtTheEnd() &&  (acceptingStates.find(state) != acceptingStates.end());
 }
@@ -240,7 +256,7 @@ std::ostream & TuringMachine::showConfiguration(std::ostream & stream) {
 	// 状態
 	stream << "( ";
 	stream << state;
-	if ( acceptingStates.find(state) != acceptingStates.end() )
+	if ( inAcceptingState() )
 		stream << "!";
 	stream << ", " ;
 
